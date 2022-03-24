@@ -1,6 +1,15 @@
 <?php
 
+use App\Http\Controllers\ExerciseController;
+use App\Http\Controllers\ExerciseDiaryController;
+use App\Http\Controllers\FoodDiaryController;
+use App\Http\Controllers\GroceriesController;
+use App\Http\Controllers\NutrientsController;
+use App\Http\Controllers\RecipeBrowserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RecipesController;
+use App\Http\Controllers\WorkoutDiaryController;
+use App\Http\Controllers\WorkoutsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,36 +27,26 @@ Route::get('/', function () {
 });
 
 // Recipes
-Route::get('/recipes', function () {
-    return 'Recipes';
-});
+Route::get('/recipes', [RecipesController::class, 'index']);
+
+Route::get('/recipes/{id}', [RecipesController::class, 'show'])->where('id', '[0-9]+');
 
 // Browse for Recipes
-Route::get('/recipes/browse', function () {
-    return 'Browse for recipes';
-});
+Route::get('/recipes/browse', [RecipeBrowserController::class, 'index']);
 
 // Groceries
-Route::get('/groceries', function () {
-    return 'Groceries';
-});
+Route::get('/groceries', [GroceriesController::class, 'index']);
 
 // Food Diary
-Route::get('/eats', function () {
-    return 'Food Diary';
-});
+Route::get('/eats', [FoodDiaryController::class, 'index']);
 
 // Nutritional Breakdown
-Route::get('/eats/nutrition', function () {
-    return 'Nutritional breakdown';
-});
+Route::get('/eats/nutrition', [NutrientsController::class, 'index']);
 
-// Workout Plans
-Route::get('/workout', function () {
-    return 'Workouts';
-});
+// Exercises
+Route::get('/exercises', [ExerciseController::class, 'index']);
 
-// Workout Diary
-Route::get('/workout/diary', function () {
-    return 'Workout Diary';
-});
+Route::get('/exercises/{id}', [ExerciseController::class, 'show'])->where('id', '[0-9]+');
+
+// Exercise Diary
+Route::get('/workouts', [ExerciseDiaryController::class, 'index']);

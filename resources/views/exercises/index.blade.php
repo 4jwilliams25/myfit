@@ -2,7 +2,6 @@
 
 @section('content')
 <body>
-    <h1>This is my body</h1>
+    <h1>These are my exercises</h1>
 </body>
 @endsection
-
