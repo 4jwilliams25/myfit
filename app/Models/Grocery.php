@@ -8,4 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class Grocery extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'item', 'done'
+    ];
+
+    public function toggle()
+    {
+        $this->update([
+            'done' => !$this->done
+        ]);
+    }
 }

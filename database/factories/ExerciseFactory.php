@@ -16,11 +16,12 @@ class ExerciseFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->title,
+            'name' => $this->faker->name(),
             'repetitions' => 4,
             'sets' => 15,
             'weight' => $this->faker->numberBetween(25, 65),
             'notes' => $this->faker->sentence(),
+            'user_id' => $this->faker->numberBetween(1, 10),
             'created_at' => now(),
             'updated_at' => now()
         ];
