@@ -15,10 +15,10 @@ class CreateNutrientsTable extends Migration
     {
         Schema::create('nutrients', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('serving_id');
             $table->string('title');
             $table->float('amount');
             $table->string('unit');
+            $table->foreignId('serving_id')->constrained('servings');
             $table->timestamps();
         });
     }

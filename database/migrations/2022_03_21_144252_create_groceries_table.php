@@ -14,9 +14,10 @@ class CreateGroceriesTable extends Migration
     public function up()
     {
         Schema::create('groceries', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->string('item');
             $table->boolean('done')->nullable();
+            $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });
     }
