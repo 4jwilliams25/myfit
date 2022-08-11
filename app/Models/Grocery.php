@@ -10,7 +10,7 @@ class Grocery extends Model
     use HasFactory;
 
     protected $fillable = [
-        'item', 'done'
+        'item', 'done', 'user_id'
     ];
 
     public function toggle()

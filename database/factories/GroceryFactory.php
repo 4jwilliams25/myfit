@@ -16,7 +16,8 @@ class GroceryFactory extends Factory
     {
         return [
             'item' => $this->faker->word(),
-            'done' => 0
+            'done' => 0,
+            'user_id' => 1
         ];
     }
 }

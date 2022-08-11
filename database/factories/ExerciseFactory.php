@@ -21,7 +21,7 @@ class ExerciseFactory extends Factory
             'sets' => 15,
             'weight' => $this->faker->numberBetween(25, 65),
             'notes' => $this->faker->sentence(),
-            'user_id' => $this->faker->numberBetween(1, 10),
+            'user_id' => 1,
             'created_at' => now(),
             'updated_at' => now()
         ];

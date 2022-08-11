@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Models\Food;
 use App\Models\Nutrient;
+use App\Models\Serving;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -13,6 +15,8 @@ class NutrientFeatureTest extends TestCase
 
     public function test_add_one_nutrient()
     {
+        Food::factory()->create();
+        Serving::factory()->create();
         $response = $this->post('/nutrients', $this->data());
 
         $nutrient = Nutrient::first();
@@ -27,6 +31,8 @@ class NutrientFeatureTest extends TestCase
 
     public function test_get_all_nutrients()
     {
+        Food::factory()->create();
+        Serving::factory()->create();
         Nutrient::factory()->count(5)->create();
 
         $response = $this->get('/nutrients');
@@ -37,6 +43,8 @@ class NutrientFeatureTest extends TestCase
 
     public function test_get_all_nutrients_for_one_serving()
     {
+        Food::factory()->create();
+        Serving::factory()->count(2)->create();
         Nutrient::factory()->createMany([
             ['serving_id' => 1],
             ['serving_id' => 1],
@@ -54,6 +62,8 @@ class NutrientFeatureTest extends TestCase
 
     public function test_get_one_nutrient()
     {
+        Food::factory()->create();
+        Serving::factory()->create();
         $nutrient1 = Nutrient::factory()->create();
         $nutrient2 = Nutrient::factory()->create();
 
@@ -67,6 +77,9 @@ class NutrientFeatureTest extends TestCase
 
     public function test_update_one_nutrient()
     {
+        Food::factory()->create();
+        Serving::factory()->create();
+
         $response = $this->post('/nutrients', $this->data());
         $nutrient = Nutrient::first();
 
@@ -84,6 +97,9 @@ class NutrientFeatureTest extends TestCase
 
     public function test_delete_one_nutrient()
     {
+        Food::factory()->create();
+        Serving::factory()->create();
+
         $this->withoutExceptionHandling();
 
         $nutrient = Nutrient::factory()->create();

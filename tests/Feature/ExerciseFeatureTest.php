@@ -30,7 +30,7 @@ class ExerciseFeatureTest extends TestCase
 
     public function test_get_one_exercise()
     {
-        $this->withoutExceptionHandling();
+        User::factory()->create();
 
         $exercise1 = Exercise::factory()->create();
         $exercise2 = Exercise::factory()->create();
@@ -79,8 +79,7 @@ class ExerciseFeatureTest extends TestCase
 
     public function test_delete_one_exercise()
     {
-        $this->withoutExceptionHandling();
-
+        User::factory()->create();
         $exercise = Exercise::factory()->create();
 
         $this->assertCount(1, Exercise::all());

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Grocery;
 use Illuminate\Http\Request;
 
@@ -44,7 +45,8 @@ class GroceriesController extends Controller
     {
         return request()->validate([
             'item' => 'required',
-            'done' => ''
+            'done' => '',
+            'user_id' => 'required'
         ]);
     }
 }

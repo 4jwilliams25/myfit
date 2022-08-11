@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class NutrientFactory extends Factory
+class ServingFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -14,10 +14,12 @@ class NutrientFactory extends Factory
     public function definition()
     {
         return [
-            'serving_id' => 1,
-            'title' => $this->faker->name(),
-            'amount' => $this->faker->numberBetween(15, 75),
-            'unit' => 'grams',
+            'unit_of_measure' => $this->faker->randomElement([
+                'gram',
+                'lb',
+                'ounce'
+            ]),
+            'food_id' => 1,
             'created_at' => now(),
             'updated_at' => now()
         ];
