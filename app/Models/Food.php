@@ -9,7 +9,14 @@ class Food extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['name', 'servings'];
+
     protected $casts = [
         'serving_types' => 'array',
     ];
+
+    public function recipes()
+    {
+        return $this->belongsToMany(Recipe::class);
+    }
 }

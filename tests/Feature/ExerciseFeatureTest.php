@@ -28,6 +28,19 @@ class ExerciseFeatureTest extends TestCase
         $this->assertEquals('exceeded once', Exercise::first()->notes);
     }
 
+    public function test_get_all_exercises()
+    {
+        $this->withoutExceptionHandling();
+
+        User::factory()->create();
+        Exercise::factory()->count(3)->create();
+
+        $response = $this->get('/exercises');
+
+        $this->assertCount(3, Exercise::all());
+        $response->assertJsonCount(3);
+    }
+
     public function test_get_one_exercise()
     {
         User::factory()->create();

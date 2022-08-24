@@ -64,7 +64,7 @@ class NutrientFeatureTest extends TestCase
     {
         Food::factory()->create();
         Serving::factory()->create();
-        $nutrient1 = Nutrient::factory()->create();
+        Nutrient::factory()->create();
         $nutrient2 = Nutrient::factory()->create();
 
         $response = $this->get('/nutrient/' . $nutrient2->id);

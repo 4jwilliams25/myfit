@@ -46,6 +46,38 @@ class GroceryFeatureTest extends TestCase
         $this->assertCount(2, Grocery::all());
     }
 
+    public function test_get_one_grocery()
+    {
+        $this->withoutExceptionHandling();
+        User::factory()->create();
+        Grocery::factory()->count(2)->create();
+        $grocery1 = Grocery::first();
+
+        $response = $this->get('/grocery/' . $grocery1->id);
+
+        $this->assertCount(2, Grocery::all());
+        $response->assertJsonCount(1);
+        $this->assertEquals($grocery1->item, $response[0]['item']);
+        $this->assertEquals($grocery1->done, $response[0]['done']);
+    }
+
+    public function test_get_all_groceries_for_one_user()
+    {
+        User::factory()->count(2)->create();
+        Grocery::factory()->createMany([
+            ['user_id' => 1],
+            ['user_id' => 1],
+            ['user_id' => 2],
+        ]);
+
+        $response = $this->get('/groceries/' . 1);
+
+        $this->assertCount(3, Grocery::all());
+        $response->assertJsonCount(2);
+        $this->assertEquals(1, $response[0]['user_id']);
+        $this->assertEquals(1, $response[1]['user_id']);
+    }
+
     public function test_update_one_grocery()
     {
         $user = User::factory()->create();

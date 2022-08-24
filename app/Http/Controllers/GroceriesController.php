@@ -24,6 +24,20 @@ class GroceriesController extends Controller
         return redirect('/');
     }
 
+    public function get_one_grocery(Grocery $grocery)
+    {
+        $groceryItem = Grocery::where('id', $grocery->id)->get();
+
+        return $groceryItem;
+    }
+
+    public function get_all_groceries_for_one_user($userId)
+    {
+        $groceries = Grocery::where('user_id', $userId)->get();
+
+        return $groceries;
+    }
+
     public function update(Grocery $grocery)
     {
         $data = [

@@ -12,4 +12,19 @@ class Recipe extends Model
     protected $casts = [
         'ingredients' => 'array'
     ];
+
+    protected $fillable = [
+        'name',
+        'cook_time',
+        'prep_time',
+        'servings',
+        'difficulty',
+        'directions',
+        'user_id'
+    ];
+
+    public function ingredients()
+    {
+        return $this->belongsToMany(Food::class);
+    }
 }
