@@ -2,6 +2,6 @@
 
 @section('content')
 <body>
-    <h1>This is my exercise diary!</h1>
+    <h1>This is my daily nutritional breakdown</h1>
 </body>
 @endsection

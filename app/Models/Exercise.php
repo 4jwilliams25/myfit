@@ -11,8 +11,22 @@ class Exercise extends Model
 
     protected $fillable = ['name', 'repetitions', 'sets', 'weight', 'notes', 'user_id'];
 
-    public function user()
+    protected $table = 'exercises';
+
+    protected $primaryKey = 'id';
+
+    public function users()
     {
-        return $this->hasOne(User::class);
+        return $this->belongsToMany(User::class)->withTimestamps();
+    }
+
+    public function diaries()
+    {
+        return $this->belongsToMany(Diary::class)->withTimestamps();
+    }
+
+    public function workouts()
+    {
+        return $this->belongsToMany(Workout::class)->withTimestamps();
     }
 }

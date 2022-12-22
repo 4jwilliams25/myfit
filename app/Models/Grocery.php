@@ -19,4 +19,9 @@ class Grocery extends Model
             'done' => !$this->done
         ]);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

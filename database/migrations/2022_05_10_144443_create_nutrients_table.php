@@ -18,7 +18,7 @@ class CreateNutrientsTable extends Migration
             $table->string('title');
             $table->float('amount');
             $table->string('unit');
-            $table->foreignId('serving_id')->constrained('servings');
+            $table->foreignId('serving_id')->constrained('servings')->onDelete('cascade');
             $table->timestamps();
         });
     }

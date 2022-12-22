@@ -8,9 +8,22 @@ use Illuminate\Support\Facades\DB;
 
 class FoodController extends Controller
 {
-    public function index()
+    public function index(Food $food)
     {
-        return view('food.index');
+        $food = $this->get_one_food_item($food);
+
+        return view('food.index', [
+            'food' => $food
+        ]);
+    }
+
+    public function food_editview(Food $food)
+    {
+        $food = $this->get_one_food_item($food);
+
+        return view('food.food_edit', [
+            'food' => $food
+        ]);
     }
 
     public function store()

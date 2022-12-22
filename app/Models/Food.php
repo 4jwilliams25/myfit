@@ -17,6 +17,16 @@ class Food extends Model
 
     public function recipes()
     {
-        return $this->belongsToMany(Recipe::class);
+        return $this->belongsToMany(Recipe::class)->withTimestamps();
+    }
+
+    public function servingTypes()
+    {
+        return $this->hasMany(Serving::class);
+    }
+
+    public function diaries()
+    {
+        return $this->belongsToMany(Diary::class)->withTimestamps();
     }
 }

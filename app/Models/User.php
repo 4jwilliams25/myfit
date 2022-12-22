@@ -42,8 +42,27 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    protected $table = 'users';
+
+    protected $primaryKey = 'id';
+
     public function exercises()
     {
-        return $this->hasMany(Exercise::class);
+        return $this->belongsToMany(Exercise::class)->withTimestamps();
+    }
+
+    public function groceries()
+    {
+        return $this->hasMany(Grocery::class);
+    }
+
+    public function recipes()
+    {
+        return $this->belongsToMany(Recipe::class)->withTimestamps();
+    }
+
+    public function workouts()
+    {
+        return $this->belongsToMany(Workout::class)->withTimestamps();
     }
 }

@@ -23,7 +23,6 @@ class RecipeFeatureTest extends TestCase
         $this->assertEquals(1, $recipe->servings);
         $this->assertEquals('easy', $recipe->difficulty);
         $this->assertEquals('Prep the chick ahead of time. Then fry an egg with an onion, toast the bread, and throw all the ingredients together', $recipe->directions);
-        $this->assertEquals(1, $recipe->user_id);
         $response->assertRedirect('/recipe/' . $recipe->id);
     }
 
@@ -43,24 +42,6 @@ class RecipeFeatureTest extends TestCase
         $this->assertEquals(1, $response[0]['servings']);
         $this->assertEquals('easy', $response[0]['difficulty']);
         $this->assertEquals('Prep the chick ahead of time. Then fry an egg with an onion, toast the bread, and throw all the ingredients together', $response[0]['directions']);
-        $this->assertEquals(1, $response[0]['user_id']);
-    }
-
-    public function test_get_all_recipes_for_one_user()
-    {
-        User::factory()->count(2)->create();
-        Recipe::factory()->createMany([
-            ['user_id' => 1],
-            ['user_id' => 2],
-            ['user_id' => 1],
-        ]);
-
-        $response = $this->get('/user/recipes/' . 1);
-
-        $this->assertCount(3, Recipe::all());
-        $response->assertJsonCount(2);
-        $this->assertEquals(1, $response[0]['user_id']);
-        $this->assertEquals(1, $response[1]['user_id']);
     }
 
     public function test_edit_one_recipe()
@@ -83,8 +64,6 @@ class RecipeFeatureTest extends TestCase
 
     public function test_delete_one_recipe()
     {
-        $this->withoutExceptionHandling();
-
         User::factory()->create();
         $recipe = Recipe::factory()->create();
 
@@ -105,7 +84,6 @@ class RecipeFeatureTest extends TestCase
             'servings' => 1,
             'difficulty' => 'easy',
             'directions' => 'Prep the chick ahead of time. Then fry an egg with an onion, toast the bread, and throw all the ingredients together',
-            'user_id' => 1
         ];
     }
 }

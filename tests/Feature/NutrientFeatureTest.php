@@ -41,25 +41,6 @@ class NutrientFeatureTest extends TestCase
         $response->assertJsonCount(5);
     }
 
-    public function test_get_all_nutrients_for_one_serving()
-    {
-        Food::factory()->create();
-        Serving::factory()->count(2)->create();
-        Nutrient::factory()->createMany([
-            ['serving_id' => 1],
-            ['serving_id' => 1],
-            ['serving_id' => 2]
-        ]);
-
-        $response = $this->get('/nutrients/' . 1);
-
-        // $response->assertStatus(200);
-        $response->assertJsonCount(2);
-        $this->assertCount(3, Nutrient::all());
-        $this->assertEquals(1, $response[0]['serving_id']);
-        $this->assertEquals(1, $response[1]['serving_id']);
-    }
-
     public function test_get_one_nutrient()
     {
         Food::factory()->create();

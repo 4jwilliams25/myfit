@@ -18,10 +18,10 @@
         </li>
         <li>
             <a 
-                href="eats"
-                class="{{ request()->is('eats') ? 'active' : '' }}"
+                href="diary"
+                class="{{ request()->is('diary') ? 'active' : '' }}"
             >
-                Food Diary
+                Diary
             </a>
         </li>
         <li>
@@ -45,7 +45,7 @@
                 href="workouts"
                 class="{{ request()->is('workouts') ? 'active' : '' }}"
             >
-                Exercise Diary
+                Workouts
             </a>
         </li>
     </ul>

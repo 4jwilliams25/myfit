@@ -63,8 +63,6 @@ class FoodFeatureTest extends TestCase
 
     public function test_delete_one_food_item()
     {
-        $this->withoutExceptionHandling();
-
         $foodItem = Food::factory()->create();
         $this->assertCount(1, Food::all());
 

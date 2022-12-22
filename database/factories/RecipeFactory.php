@@ -24,7 +24,6 @@ class RecipeFactory extends Factory
                 'hard'
             ]),
             'directions' => $this->faker->sentence(),
-            'user_id' => 1
         ];
     }
 }

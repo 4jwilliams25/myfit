@@ -35,14 +35,11 @@ class GroceryFeatureTest extends TestCase
             'user_id' => $user->id
         ]);
 
-        $response = $this->get('/groceries')
-            ->assertStatus(200);
+        $response = $this->get('/groceries/all');
 
-        $data = $response->getOriginalContent()->getData();
-        $groceries = $data['groceries']->all();
-
-        $this->assertEquals('milk', $groceries[0]->item);
-        $this->assertEquals('honey', $groceries[1]->item);
+        $response->assertStatus(200);
+        $this->assertEquals('milk', $response[0]['item']);
+        $this->assertEquals('honey', $response[1]['item']);
         $this->assertCount(2, Grocery::all());
     }
 
@@ -59,23 +56,6 @@ class GroceryFeatureTest extends TestCase
         $response->assertJsonCount(1);
         $this->assertEquals($grocery1->item, $response[0]['item']);
         $this->assertEquals($grocery1->done, $response[0]['done']);
-    }
-
-    public function test_get_all_groceries_for_one_user()
-    {
-        User::factory()->count(2)->create();
-        Grocery::factory()->createMany([
-            ['user_id' => 1],
-            ['user_id' => 1],
-            ['user_id' => 2],
-        ]);
-
-        $response = $this->get('/groceries/' . 1);
-
-        $this->assertCount(3, Grocery::all());
-        $response->assertJsonCount(2);
-        $this->assertEquals(1, $response[0]['user_id']);
-        $this->assertEquals(1, $response[1]['user_id']);
     }
 
     public function test_update_one_grocery()

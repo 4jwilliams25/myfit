@@ -39,23 +39,6 @@ class ServingFeatureTest extends TestCase
         $this->assertEquals($response[0]['food_id'], $testServingType->food_id);
     }
 
-    public function test_get_all_serving_types_for_one_food()
-    {
-        Food::factory()->count(2)->create();
-        Serving::factory()->createMany([
-            ['food_id' => 1],
-            ['food_id' => 1],
-            ['food_id' => 2]
-        ]);
-
-        $response = $this->get('/servings/' . 1);
-
-        $this->assertCount(3, Serving::all());
-        $response->assertJsonCount(2);
-        $this->assertEquals(1, $response[0]['food_id']);
-        $this->assertEquals(1, $response[1]['food_id']);
-    }
-
     public function test_update_one_serving_type()
     {
         Food::factory()->count(2)->create();

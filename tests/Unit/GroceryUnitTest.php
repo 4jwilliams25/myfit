@@ -27,4 +27,17 @@ class GroceryUnitTest extends TestCase
 
         $this->assertEquals(0, Grocery::first()->done);
     }
+
+    public function test_get_grocery_user()
+    {
+        User::factory()->count(2)->create();
+        Grocery::factory()->create();
+        $grocery = Grocery::first();
+
+        $response = $grocery->user->toArray();
+
+        $this->assertCount(2, User::all());
+        $this->assertEquals(1, $response['id']);
+        $this->assertEquals(6, count($response));
+    }
 }

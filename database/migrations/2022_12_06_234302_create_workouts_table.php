@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateServingsTable extends Migration
+class CreateWorkoutsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateServingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('servings', function (Blueprint $table) {
+        Schema::create('workouts', function (Blueprint $table) {
             $table->id();
-            $table->string('unit_of_measure');
-            $table->foreignId('food_id')->constrained('food')->onDelete('cascade');
+            $table->string('name');
+            $table->longText('description');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateServingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('servings');
+        //
     }
 }

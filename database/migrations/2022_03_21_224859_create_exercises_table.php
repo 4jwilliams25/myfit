@@ -20,7 +20,6 @@ class CreateExercisesTable extends Migration
             $table->integer('sets')->nullable();
             $table->integer('weight')->nullable();
             $table->mediumText('notes')->nullable();
-            $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });
     }

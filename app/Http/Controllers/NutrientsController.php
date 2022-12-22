@@ -9,11 +9,6 @@ use Illuminate\Support\Facades\DB;
 
 class NutrientsController extends Controller
 {
-    public function index()
-    {
-        return view('nutrients.index');
-    }
-
     public function store()
     {
         $nutrient = Nutrient::create($this->validateRequest());

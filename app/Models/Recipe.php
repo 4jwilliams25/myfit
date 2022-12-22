@@ -23,8 +23,18 @@ class Recipe extends Model
         'user_id'
     ];
 
-    public function ingredients()
+    public function food()
     {
-        return $this->belongsToMany(Food::class);
+        return $this->belongsToMany(Food::class)->withTimestamps();
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class)->withTimestamps();
+    }
+
+    public function diaries()
+    {
+        return $this->belongsToMany(Diary::class)->withTimestamps();
     }
 }

@@ -21,7 +21,6 @@ class CreateRecipesTable extends Migration
             $table->integer('servings');
             $table->string('difficulty');
             $table->longText('directions');
-            $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });
     }

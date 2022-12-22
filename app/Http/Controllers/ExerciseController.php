@@ -26,21 +26,15 @@ class ExerciseController extends Controller
             ->where('id', $id)
             ->get();
 
-        return $exercise;
+        return view('exercises.exercise_details', [
+            'exercise' => $exercise
+        ]);
     }
 
     // GET ALL EXERCISES
     protected function get_all_exercises()
     {
         $exercises = DB::table('exercises')->get();
-
-        return $exercises;
-    }
-
-    // GET ALL EXERCISES FOR ONE USER
-    public function get_all_users_exercises($userId)
-    {
-        $exercises = Exercise::where('user_id', $userId)->get();
 
         return $exercises;
     }
@@ -80,7 +74,6 @@ class ExerciseController extends Controller
                 'sets' => '',
                 'weight' => '',
                 'notes' => '',
-                'user_id' => 'required'
             ]);
 
             return request()->all();

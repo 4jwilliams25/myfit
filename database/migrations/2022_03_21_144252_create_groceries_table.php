@@ -17,7 +17,7 @@ class CreateGroceriesTable extends Migration
             $table->id();
             $table->string('item');
             $table->boolean('done')->nullable();
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

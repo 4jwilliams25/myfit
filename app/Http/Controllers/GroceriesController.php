@@ -8,12 +8,12 @@ use Illuminate\Http\Request;
 
 class GroceriesController extends Controller
 {
-    public function index()
+    public function index(User $user)
     {
-        $groceryData = Grocery::all();
+        $usersGroceries = $user->groceries;
 
         return view('groceries.index', [
-            'groceries' => $groceryData
+            'groceries' => $usersGroceries
         ]);
     }
 
@@ -31,12 +31,17 @@ class GroceriesController extends Controller
         return $groceryItem;
     }
 
-    public function get_all_groceries_for_one_user($userId)
+    public function get_all_groceries()
     {
-        $groceries = Grocery::where('user_id', $userId)->get();
-
-        return $groceries;
+        return Grocery::all();
     }
+
+    // public function get_all_groceries_for_one_user($userId)
+    // {
+    //     $groceries = Grocery::where('user_id', $userId)->get();
+
+    //     return $groceries;
+    // }
 
     public function update(Grocery $grocery)
     {

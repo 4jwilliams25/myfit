@@ -31,13 +31,6 @@ class RecipesController extends Controller
         return $result;
     }
 
-    public function get_all_recipes_for_one_user($userId)
-    {
-        $userRecipes = Recipe::where('user_id', $userId)->get();
-
-        return $userRecipes;
-    }
-
     public function update_one_recipe(Recipe $recipe)
     {
         $data = $this->validateRequest();
@@ -61,8 +54,7 @@ class RecipesController extends Controller
             'prep_time' => '',
             'servings' => 'required',
             'difficulty' => 'required',
-            'directions' => '',
-            'user_id' => 'required'
+            'directions' => ''
         ]);
     }
 }
