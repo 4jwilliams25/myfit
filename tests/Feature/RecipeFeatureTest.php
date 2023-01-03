@@ -32,7 +32,7 @@ class RecipeFeatureTest extends TestCase
         $this->post('/recipes', $this->data());
         Recipe::factory()->create();
 
-        $response = $this->get('/recipes/' . 1);
+        $response = $this->get('/recipe/' . 1);
 
         $this->assertCount(2, Recipe::all());
         $response->assertJsonCount(1);

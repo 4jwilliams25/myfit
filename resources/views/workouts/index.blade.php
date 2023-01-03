@@ -2,6 +2,6 @@
 
 @section('content')
 <body>
-    <h1>Workouts</h1>
+    <h1>This is my user's workouts</h1>
 </body>
 @endsection

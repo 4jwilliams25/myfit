@@ -31,8 +31,10 @@ Route::get('/mystuff', function () {
 
 // Recipes
 Route::post('/recipes', [RecipesController::class, 'store']);
-Route::get('/recipes', [RecipesController::class, 'index']);
-Route::get('/recipes/{recipe}', [RecipesController::class, 'get_one_recipe']);
+Route::get('/recipes/{user}', [RecipesController::class, 'index']);
+Route::get('/recipe/{recipe}', [RecipesController::class, 'get_one_recipe']);
+Route::get('/recipe/details/{recipe}', [RecipesController::class, 'recipe_detailview']);
+Route::get('/recipe/edit/{recipe}', [RecipesController::class, 'recipe_editview']);
 Route::patch('/recipe/{recipe}', [RecipesController::class, 'update_one_recipe']);
 Route::delete('/recipe/{recipe}', [RecipesController::class, 'delete_one_recipe']);
 
@@ -83,7 +85,9 @@ Route::delete('/exercise/{exercise}', [ExerciseController::class, 'destroy']);
 
 // Workouts
 Route::post('/workouts', [WorkoutController::class, 'store']);
-Route::get('/workouts/{workout}', [WorkoutController::class, 'get_one_workout']);
+Route::get('/workout/{workout}', [WorkoutController::class, 'get_one_workout']);
+Route::get('/workouts/{user}', [WorkoutController::class, 'index']);
+Route::get('/workout/edit/{workout}', [WorkoutController::class, 'workout_editview']);
 Route::get('/workouts', [WorkoutController::class, 'get_all_workouts']);
 Route::patch('/workouts/{workout}', [WorkoutController::class, 'update_one_workout']);
 Route::delete('/workouts/{workout}', [WorkoutController::class, 'destroy']);

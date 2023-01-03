@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Workout;
 use Illuminate\Http\Request;
 
 class WorkoutController extends Controller
 {
-    public function index()
+    public function index(User $user)
     {
-        return view('workouts.index');
+        $data = $user->workouts;
+
+        return view('workouts.index', [
+            'workouts' => $data
+        ]);
     }
 
     public function store()
@@ -17,6 +22,15 @@ class WorkoutController extends Controller
         $workout = Workout::create($this->validateRequest());
 
         return redirect('/workouts/' . $workout->id);
+    }
+
+    public function workout_editview(Workout $workout)
+    {
+        $data = $workout->exercises;
+
+        return view('workouts.workout_edit', [
+            'exercises' => $data
+        ]);
     }
 
     public function get_one_workout(Workout $workout)

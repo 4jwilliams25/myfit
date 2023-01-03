@@ -27,7 +27,7 @@ class WorkoutFeatureTest extends TestCase
         Workout::factory()->count(3)->create();
         $workout = Workout::first();
 
-        $response = $this->get('/workouts/' . $workout->id);
+        $response = $this->get('/workout/' . $workout->id);
 
         $this->assertCount(4, Workout::all());
         $response->assertJsonCount(1);

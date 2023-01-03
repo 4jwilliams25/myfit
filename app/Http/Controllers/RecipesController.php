@@ -3,13 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Recipe;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class RecipesController extends Controller
 {
-    public function index()
+    public function index(User $user)
     {
-        return view('recipes.index');
+        $user_recipes = $user->recipes;
+
+        return view('recipes.index', [
+            'recipes' => $user_recipes
+        ]);
     }
 
     public function store()
@@ -22,6 +27,24 @@ class RecipesController extends Controller
     public function show($id)
     {
         return $id;
+    }
+
+    public function recipe_detailview(Recipe $recipe)
+    {
+        $data = $this->get_one_recipe($recipe);
+
+        return view('recipes.recipe_details', [
+            'recipe' => $data
+        ]);
+    }
+
+    public function recipe_editview(Recipe $recipe)
+    {
+        $data = $this->get_one_recipe($recipe);
+
+        return view('recipes.recipe_edit', [
+            'recipe' => $data
+        ]);
     }
 
     public function get_one_recipe(Recipe $recipe)
