@@ -5,16 +5,11 @@
         <div>
             <div>
                 <div>
-                    @if($errors->any())
+                    {{-- @if($errors->any())
                         @foreach ($errors->all() as $error)
                             <h1>{{ $error }}</h1>
                         @endforeach
-                    @endif
-                    @error('email')
-                    <span role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                    @enderror
+                    @endif --}}
                     <div>
                         <p>Sign into your account</p>
                         <form method="POST" action="{{ route('login') }}">

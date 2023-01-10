@@ -48,5 +48,12 @@
                 Workouts
             </a>
         </li>
+        <li>
+            <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+        </li>
     </ul>
+
+    <form id="logout-form" action="{{ route('logout') }}" method="POST">
+        @csrf
+    </form>
 </nav>
