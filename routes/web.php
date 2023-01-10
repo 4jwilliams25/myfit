@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RecipesController;
 use App\Http\Controllers\ServingController;
 use App\Http\Controllers\WorkoutController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,11 @@ use App\Http\Controllers\WorkoutController;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/home', function () {
+    dd(Auth::user());
+})->middleware(middleware: 'auth');
+
 Route::get('/mystuff', function () {
     return view('my_stuff.index');
 });

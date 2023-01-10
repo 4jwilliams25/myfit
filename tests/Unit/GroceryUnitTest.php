@@ -38,6 +38,6 @@ class GroceryUnitTest extends TestCase
 
         $this->assertCount(2, User::all());
         $this->assertEquals(1, $response['id']);
-        $this->assertEquals(6, count($response));
+        $this->assertEquals(8, count($response));
     }
 }
