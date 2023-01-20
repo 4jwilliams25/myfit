@@ -3,6 +3,7 @@
 use App\Models\Recipe;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class RecipeFeatureTest extends TestCase
@@ -46,11 +47,12 @@ class RecipeFeatureTest extends TestCase
 
     public function test_edit_one_recipe()
     {
-        User::factory()->create();
-        $this->post('/recipes', $this->data());
+        $this->create_authenticated_user();
+        $user = Auth::user();
+        $this->actingAs($user)->withSession(['banned' => false])->post('/recipes', $this->data());
         $recipe = Recipe::first();
 
-        $response = $this->patch('/recipe/' . $recipe->id, array_merge($this->data(), [
+        $response = $this->actingAs($user)->withSession(['banned' => false])->patch('/recipe/' . $recipe->id, array_merge($this->data(), [
             'name' => 'Turkey Burger and Egg Sammich',
             'servings' => 1.5
         ]));
@@ -64,15 +66,22 @@ class RecipeFeatureTest extends TestCase
 
     public function test_delete_one_recipe()
     {
-        User::factory()->create();
+        $this->create_authenticated_user();
+        $user = Auth::user();
         $recipe = Recipe::factory()->create();
 
         $this->assertCount(1, Recipe::all());
 
-        $response = $this->delete('/recipe/' . $recipe->id);
+        $response = $this->actingAs($user)->withSession(['banned' => false])->delete('/recipe/' . $recipe->id);
 
         $this->assertCount(0, Recipe::all());
         $response->assertRedirect('/recipes');
+    }
+
+    private function create_authenticated_user()
+    {
+        $user = User::factory()->create();
+        Auth::login($user);
     }
 
     private function data()

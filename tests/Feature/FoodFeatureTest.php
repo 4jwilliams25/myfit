@@ -3,7 +3,9 @@
 namespace Tests\Feature;
 
 use App\Models\Food;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class FoodFeatureTest extends TestCase
@@ -12,8 +14,10 @@ class FoodFeatureTest extends TestCase
 
     public function test_add_one_food()
     {
-        $response = $this->post('/food', $this->data());
+        $this->create_authenticated_user();
+        $user = Auth::user();
 
+        $response = $this->actingAs($user)->withSession(['banned' => false])->post('/food', $this->data());
         $food = Food::first();
 
         $this->assertCount(1, Food::all());
@@ -47,10 +51,12 @@ class FoodFeatureTest extends TestCase
 
     public function test_edit_one_food_item()
     {
-        $this->post('/food', $this->data());
+        $this->create_authenticated_user();
+        $user = Auth::user();
+        $this->actingAs($user)->withSession(['banned' => false])->post('/food', $this->data());
         $foodItem = Food::first();
 
-        $response = $this->patch('/food/' . $foodItem->id, array_merge($this->data(), [
+        $response = $this->actingAs($user)->withSession(['banned' => false])->patch('/food/' . $foodItem->id, array_merge($this->data(), [
             'name' => 'Chicken Breast',
             'servings' => 1.5
         ]));
@@ -63,12 +69,21 @@ class FoodFeatureTest extends TestCase
 
     public function test_delete_one_food_item()
     {
+        $this->create_authenticated_user();
+        $user = Auth::user();
         $foodItem = Food::factory()->create();
         $this->assertCount(1, Food::all());
 
-        $response = $this->delete('/food/' . $foodItem->id);
+        $response = $this->actingAs($user)->withSession(['banned' => false])->delete('/food/' . $foodItem->id);
+
         $this->assertCount(0, Food::all());
         $response->assertRedirect('/food');
+    }
+
+    private function create_authenticated_user()
+    {
+        $user = User::factory()->create();
+        Auth::login($user);
     }
 
     private function data()

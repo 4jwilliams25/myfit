@@ -29,67 +29,67 @@ Route::get('/', function () {
 
 Route::get('/mystuff', function () {
     return view('my_stuff.index');
-});
+})->middleware(middleware: 'auth');
 
 // Recipes
 Route::post('/recipes', [RecipesController::class, 'store']);
-Route::get('/recipes/{user}', [RecipesController::class, 'index']);
+Route::get('/recipes/{user}', [RecipesController::class, 'index'])->middleware(middleware: 'auth');
 Route::get('/recipe/{recipe}', [RecipesController::class, 'get_one_recipe']);
 Route::get('/recipe/details/{recipe}', [RecipesController::class, 'recipe_detailview']);
-Route::get('/recipe/edit/{recipe}', [RecipesController::class, 'recipe_editview']);
-Route::patch('/recipe/{recipe}', [RecipesController::class, 'update_one_recipe']);
-Route::delete('/recipe/{recipe}', [RecipesController::class, 'delete_one_recipe']);
+Route::get('/recipe/edit/{recipe}', [RecipesController::class, 'recipe_editview'])->middleware(middleware: 'auth');
+Route::patch('/recipe/{recipe}', [RecipesController::class, 'update_one_recipe'])->middleware(middleware: 'auth');
+Route::delete('/recipe/{recipe}', [RecipesController::class, 'delete_one_recipe'])->middleware(middleware: 'auth');
 
 // Browse for Recipes
 Route::get('/recipes/browse', [RecipeBrowserController::class, 'index']);
 
 // Groceries
-Route::get('/groceries/all', [GroceriesController::class, 'get_all_groceries']);
-Route::get('/groceries/{user}', [GroceriesController::class, 'index']);
-Route::get('/grocery/{grocery}', [GroceriesController::class, 'get_one_grocery']);
-Route::post('/groceries', [GroceriesController::class, 'add_one_grocery_item']);
-Route::patch('/groceries/{grocery}', [GroceriesController::class, 'update']);
-Route::delete('/groceries/{grocery}', [GroceriesController::class, 'destroy']);
+Route::get('/groceries/all', [GroceriesController::class, 'get_all_groceries'])->middleware(middleware: 'auth');
+Route::get('/groceries/{user}', [GroceriesController::class, 'index'])->middleware(middleware: 'auth');
+Route::get('/grocery/{grocery}', [GroceriesController::class, 'get_one_grocery'])->middleware(middleware: 'auth');
+Route::post('/groceries', [GroceriesController::class, 'add_one_grocery_item'])->middleware(middleware: 'auth');
+Route::patch('/groceries/{grocery}', [GroceriesController::class, 'update'])->middleware(middleware: 'auth');
+Route::delete('/groceries/{grocery}', [GroceriesController::class, 'destroy'])->middleware(middleware: 'auth');
 
 // Diary
-Route::get('/diary', [DiaryController::class, 'index']);
-Route::get('/diary/nutrition', [DiaryController::class, 'daily_breakdown']);
+Route::get('/diary', [DiaryController::class, 'index'])->middleware(middleware: 'auth');
+Route::get('/diary/nutrition', [DiaryController::class, 'daily_breakdown'])->middleware(middleware: 'auth');
 
 // Nutritional Breakdown
-Route::post('/nutrients', [NutrientsController::class, 'store']);
+Route::post('/nutrients', [NutrientsController::class, 'store'])->middleware(middleware: 'auth');
 Route::get('/nutrients', [NutrientsController::class, 'get_all_nutrients']);
 Route::get('/nutrient/{nutrient}', [NutrientsController::class, 'get_one_nutrient']);
-Route::patch('/nutrients/{nutrient}', [NutrientsController::class, 'update_one_nutrient']);
-Route::delete('/nutrient/{nutrient}', [NutrientsController::class, 'delete_one_nutrient']);
+Route::patch('/nutrients/{nutrient}', [NutrientsController::class, 'update_one_nutrient'])->middleware(middleware: 'auth');
+Route::delete('/nutrient/{nutrient}', [NutrientsController::class, 'delete_one_nutrient'])->middleware(middleware: 'auth');
 
 // Foods
 Route::get('/food/details/{food}', [FoodController::class, 'index']);
-Route::get('/food/edit/{food}', [FoodController::class, 'food_editview']);
-Route::post('/food', [FoodController::class, 'store']);
+Route::get('/food/edit/{food}', [FoodController::class, 'food_editview'])->middleware(middleware: 'auth');
+Route::post('/food', [FoodController::class, 'store'])->middleware(middleware: 'auth');
 Route::get('/food/{food}', [FoodController::class, 'get_one_food_item']);
 Route::get('/food', [FoodController::class, 'get_all_food']);
-Route::patch('/food/{food}', [FoodController::class, 'update_one_food_item']);
-Route::delete('food/{food}', [FoodController::class, 'delete_one_food_item']);
+Route::patch('/food/{food}', [FoodController::class, 'update_one_food_item'])->middleware(middleware: 'auth');
+Route::delete('food/{food}', [FoodController::class, 'delete_one_food_item'])->middleware(middleware: 'auth');
 
 // Serving Types
-Route::post('/servings', [ServingController::class, 'store']);
+Route::post('/servings', [ServingController::class, 'store'])->middleware(middleware: 'auth');
 Route::get('/serving/{serving}', [ServingController::class, 'get_one_serving_type']);
-Route::patch('/servings/{serving}', [ServingController::class, 'update_one_serving_type']);
-Route::delete('/servings/{serving}', [ServingController::class, 'delete_one_serving_type']);
+Route::patch('/servings/{serving}', [ServingController::class, 'update_one_serving_type'])->middleware(middleware: 'auth');
+Route::delete('/servings/{serving}', [ServingController::class, 'delete_one_serving_type'])->middleware(middleware: 'auth');
 
 // Exercises
 Route::get('/exercises/list', [ExerciseController::class, 'index']);
 Route::get('/exercises', [ExerciseController::class, 'get_all_exercises']);
 Route::get('/exercise/{exercise}', [ExerciseController::class, 'get_one_exercise'])->where('exercise', '[0-9]+');
-Route::post('/exercises', [ExerciseController::class, 'store']);
-Route::patch('/exercises/{exercise}', [ExerciseController::class, 'update']);
-Route::delete('/exercise/{exercise}', [ExerciseController::class, 'destroy']);
+Route::post('/exercises', [ExerciseController::class, 'store'])->middleware(middleware: 'auth');
+Route::patch('/exercises/{exercise}', [ExerciseController::class, 'update'])->middleware(middleware: 'auth');
+Route::delete('/exercise/{exercise}', [ExerciseController::class, 'destroy'])->middleware(middleware: 'auth');
 
 // Workouts
-Route::post('/workouts', [WorkoutController::class, 'store']);
+Route::post('/workouts', [WorkoutController::class, 'store'])->middleware(middleware: 'auth');
 Route::get('/workout/{workout}', [WorkoutController::class, 'get_one_workout']);
-Route::get('/workouts/{user}', [WorkoutController::class, 'index']);
-Route::get('/workout/edit/{workout}', [WorkoutController::class, 'workout_editview']);
+Route::get('/workouts/{user}', [WorkoutController::class, 'index'])->middleware(middleware: 'auth');
+Route::get('/workout/edit/{workout}', [WorkoutController::class, 'workout_editview'])->middleware(middleware: 'auth');
 Route::get('/workouts', [WorkoutController::class, 'get_all_workouts']);
-Route::patch('/workouts/{workout}', [WorkoutController::class, 'update_one_workout']);
-Route::delete('/workouts/{workout}', [WorkoutController::class, 'destroy']);
+Route::patch('/workouts/{workout}', [WorkoutController::class, 'update_one_workout'])->middleware(middleware: 'auth');
+Route::delete('/workouts/{workout}', [WorkoutController::class, 'destroy'])->middleware(middleware: 'auth');

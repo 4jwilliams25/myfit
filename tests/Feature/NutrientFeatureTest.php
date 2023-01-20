@@ -5,8 +5,10 @@ namespace Tests\Feature;
 use App\Models\Food;
 use App\Models\Nutrient;
 use App\Models\Serving;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class NutrientFeatureTest extends TestCase
@@ -15,9 +17,11 @@ class NutrientFeatureTest extends TestCase
 
     public function test_add_one_nutrient()
     {
+        $this->create_authenticated_user();
+        $user = Auth::user();
         Food::factory()->create();
         Serving::factory()->create();
-        $response = $this->post('/nutrients', $this->data());
+        $response = $this->actingAs($user)->withSession(['banned' => false])->post('/nutrients', $this->data());
 
         $nutrient = Nutrient::first();
 
@@ -58,13 +62,15 @@ class NutrientFeatureTest extends TestCase
 
     public function test_update_one_nutrient()
     {
+        $this->create_authenticated_user();
+        $user = Auth::user();
         Food::factory()->create();
         Serving::factory()->create();
 
-        $response = $this->post('/nutrients', $this->data());
+        $response = $this->actingAs($user)->withSession(['banned' => false])->post('/nutrients', $this->data());
         $nutrient = Nutrient::first();
 
-        $response = $this->patch('/nutrients/' . $nutrient->id, array_merge($this->data(), [
+        $response = $this->actingAs($user)->withSession(['banned' => false])->patch('/nutrients/' . $nutrient->id, array_merge($this->data(), [
             'title' => 'fat',
             'unit' => 'calorie'
         ]));
@@ -78,6 +84,8 @@ class NutrientFeatureTest extends TestCase
 
     public function test_delete_one_nutrient()
     {
+        $this->create_authenticated_user();
+        $user = Auth::user();
         Food::factory()->create();
         Serving::factory()->create();
 
@@ -87,10 +95,16 @@ class NutrientFeatureTest extends TestCase
 
         $this->assertCount(1, Nutrient::all());
 
-        $response = $this->delete('/nutrient/' . $nutrient->id);
+        $response = $this->actingAs($user)->withSession(['banned' => false])->delete('/nutrient/' . $nutrient->id);
 
         $this->assertCount(0, Nutrient::all());
         $response->assertRedirect('/nutrients');
+    }
+
+    private function create_authenticated_user()
+    {
+        $user = User::factory()->create();
+        Auth::login($user);
     }
 
     private function data()

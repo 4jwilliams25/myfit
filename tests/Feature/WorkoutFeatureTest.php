@@ -4,6 +4,7 @@ use App\Models\Workout;
 use App\Models\Exercise;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class WorkoutFeatureTest extends TestCase
@@ -12,7 +13,10 @@ class WorkoutFeatureTest extends TestCase
 
     public function test_add_one_workout()
     {
-        $response = $this->post('/workouts', $this->data());
+        $this->create_authenticated_user();
+        $user = Auth::user();
+
+        $response = $this->actingAs($user)->withSession(['banned' => false])->post('/workouts', $this->data());
         $workout = Workout::first();
 
         $this->assertCount(1, Workout::all());
@@ -23,11 +27,13 @@ class WorkoutFeatureTest extends TestCase
 
     public function test_get_one_workout()
     {
-        $this->post('/workouts', $this->data());
+        $this->create_authenticated_user();
+        $user = Auth::user();
+        $this->actingAs($user)->withSession(['banned' => false])->post('/workouts', $this->data());
         Workout::factory()->count(3)->create();
         $workout = Workout::first();
 
-        $response = $this->get('/workout/' . $workout->id);
+        $response = $this->actingAs($user)->withSession(['banned' => false])->get('/workout/' . $workout->id);
 
         $this->assertCount(4, Workout::all());
         $response->assertJsonCount(1);
@@ -50,11 +56,13 @@ class WorkoutFeatureTest extends TestCase
 
     public function test_update_one_workout()
     {
-        $this->post('/workouts', $this->data());
+        $this->create_authenticated_user();
+        $user = Auth::user();
+        $this->actingAs($user)->withSession(['banned' => false])->post('/workouts', $this->data());
         Workout::factory()->count(3)->create();
         $workout = Workout::first();
 
-        $response = $this->patch('/workouts/' . $workout->id, array_merge($this->data(), [
+        $this->actingAs($user)->withSession(['banned' => false])->patch('/workouts/' . $workout->id, array_merge($this->data(), [
             'description' => 'This is my chest day bro!'
         ]));
 
@@ -65,13 +73,21 @@ class WorkoutFeatureTest extends TestCase
 
     public function test_delete_one_workout()
     {
+        $this->create_authenticated_user();
+        $user = Auth::user();
         Workout::factory()->count(3)->create();
         $workout = Workout::first();
 
-        $response = $this->delete('/workouts/' . $workout->id);
+        $response = $this->actingAs($user)->withSession(['banned' => false])->delete('/workouts/' . $workout->id);
 
         $this->assertCount(2, Workout::all());
         $response->assertRedirect('/workouts');
+    }
+
+    private function create_authenticated_user()
+    {
+        $user = User::factory()->create();
+        Auth::login($user);
     }
 
     private function data()

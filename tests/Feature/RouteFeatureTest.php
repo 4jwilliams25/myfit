@@ -10,6 +10,7 @@ use App\Models\Recipe;
 use App\Models\User;
 use App\Models\Workout;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class RouteFeatureTest extends TestCase
@@ -18,7 +19,10 @@ class RouteFeatureTest extends TestCase
 
     public function test_homepage_route()
     {
-        $response = $this->get('/');
+        $this->create_authenticated_user();
+        $user = Auth::user();
+
+        $response = $this->actingAs($user)->withSession(['banned' => false])->get('/');
 
         $response->assertStatus(200);
         $response->assertViewIs('welcome');
@@ -26,7 +30,10 @@ class RouteFeatureTest extends TestCase
 
     public function test_my_stuff_route()
     {
-        $response = $this->get('/mystuff');
+        $this->create_authenticated_user();
+        $user = Auth::user();
+
+        $response = $this->actingAs($user)->withSession(['banned' => false])->get('/mystuff');
 
         $response->assertStatus(200);
         $response->assertViewIs('my_stuff.index');
@@ -34,7 +41,10 @@ class RouteFeatureTest extends TestCase
 
     public function test_diary_route()
     {
-        $response = $this->get('/diary');
+        $this->create_authenticated_user();
+        $user = Auth::user();
+
+        $response = $this->actingAs($user)->withSession(['banned' => false])->get('/diary');
 
         $response->assertStatus(200);
         $response->assertViewIs('diary.index');
@@ -42,7 +52,10 @@ class RouteFeatureTest extends TestCase
 
     public function test_diary_nutritional_breakdown_route()
     {
-        $response = $this->get('/diary/nutrition');
+        $this->create_authenticated_user();
+        $user = Auth::user();
+
+        $response = $this->actingAs($user)->withSession(['banned' => false])->get('/diary/nutrition');
 
         $response->assertStatus(200);
         $response->assertViewIs('diary.daily_nutritional_breakdown');
@@ -80,9 +93,11 @@ class RouteFeatureTest extends TestCase
 
     public function test_food_editview_route()
     {
+        $this->create_authenticated_user();
+        $user = Auth::user();
         $food = Food::factory()->create();
 
-        $response = $this->get('/food/edit/' . $food->id);
+        $response = $this->actingAs($user)->withSession(['banned' => false])->get('/food/edit/' . $food->id);
 
         $response->assertStatus(200);
         $response->assertViewIs('food.food_edit');
@@ -92,10 +107,11 @@ class RouteFeatureTest extends TestCase
 
     public function test_groceries_listview_route()
     {
-        $user = User::factory()->create();
+        $this->create_authenticated_user();
+        $user = Auth::user();
         Grocery::factory()->count(3)->create();
 
-        $response = $this->get('/groceries/' . $user->id);
+        $response = $this->actingAs($user)->withSession(['banned' => false])->get('/groceries/' . $user->id);
 
         $response->assertStatus(200);
         $response->assertViewIs('groceries.index');
@@ -108,8 +124,10 @@ class RouteFeatureTest extends TestCase
         $related_recipes = Recipe::factory()->count(4)->create();
         Recipe::factory()->count(2)->create();
         $user = User::factory()->hasAttached($related_recipes)->create();
+        Auth::login($user);
+        $authUser = Auth::user();
 
-        $response = $this->get('/recipes/' . $user->id);
+        $response = $this->actingAs($authUser)->withSession(['banned' => false])->get('/recipes/' . $user->id);
 
         $response->assertStatus(200);
         $response->assertViewIs('recipes.index');
@@ -131,9 +149,11 @@ class RouteFeatureTest extends TestCase
 
     public function test_recipe_editview_route()
     {
+        $this->create_authenticated_user();
+        $user = Auth::user();
         $recipe = Recipe::factory()->create();
 
-        $response = $this->get('/recipe/edit/' . $recipe->id);
+        $response = $this->actingAs($user)->withSession(['banned' => false])->get('/recipe/edit/' . $recipe->id);
 
         $response->assertStatus(200);
         $response->assertViewIs('recipes.recipe_edit');
@@ -145,8 +165,10 @@ class RouteFeatureTest extends TestCase
         $related_workouts = Workout::factory()->count(3)->create();
         Workout::factory()->count(3)->create();
         $user = User::factory()->hasAttached($related_workouts)->create();
+        Auth::login($user);
+        $authUser = Auth::user();
 
-        $response = $this->get('/workouts/' . $user->id);
+        $response = $this->actingAs($authUser)->withSession(['banned' => false])->get('/workouts/' . $user->id);
 
         $response->assertStatus(200);
         $response->assertViewIs('workouts.index');
@@ -157,15 +179,22 @@ class RouteFeatureTest extends TestCase
 
     public function test_workout_editview_route()
     {
-        $this->withoutExceptionHandling();
         $related_exercises = Exercise::factory()->count(4)->create();
         $workout = Workout::factory()->hasAttached($related_exercises)->create();
+        $this->create_authenticated_user();
+        $user = Auth::user();
 
-        $response = $this->get('/workout/edit/' . $workout->id);
+        $response = $this->actingAs($user)->withSession(['banned' => false])->get('/workout/edit/' . $workout->id);
 
         $response->assertStatus(200);
         $response->assertViewIs('workouts.workout_edit');
         $response->assertViewHas('exercises');
         $this->assertCount(4, $response['exercises']->toArray());
+    }
+
+    private function create_authenticated_user()
+    {
+        $user = User::factory()->create();
+        Auth::login($user);
     }
 }

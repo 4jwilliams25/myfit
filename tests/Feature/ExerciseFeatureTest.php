@@ -3,8 +3,10 @@
 namespace Tests\Feature;
 
 use App\Models\Exercise;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class ExerciseFeatureTest extends TestCase
@@ -13,7 +15,10 @@ class ExerciseFeatureTest extends TestCase
 
     public function test_add_one_exercise()
     {
-        $this->post('/exercises', $this->data());
+        $this->create_authenticated_user();
+        $user = Auth::user();
+
+        $this->actingAs($user)->withSession(['banned' => false])->post('/exercises', $this->data());
 
         $this->assertCount(1, Exercise::all());
         $this->assertEquals('Flat Bar Bench', Exercise::first()->name);
@@ -49,9 +54,11 @@ class ExerciseFeatureTest extends TestCase
 
     public function test_update_one_exercise()
     {
+        $this->create_authenticated_user();
+        $user = Auth::user();
         $exercise = Exercise::factory()->create();
 
-        $this->patch('/exercises/' . $exercise->id, array_merge($this->data(), [
+        $this->actingAs($user)->withSession(['banned' => false])->patch('/exercises/' . $exercise->id, array_merge($this->data(), [
             'notes' => 'exceeded twice',
             'weight' => 50
         ]))->assertRedirect('/exercises/' . $exercise->id);
@@ -63,14 +70,22 @@ class ExerciseFeatureTest extends TestCase
 
     public function test_delete_one_exercise()
     {
+        $this->create_authenticated_user();
+        $user = Auth::user();
         $exercise = Exercise::factory()->create();
 
         $this->assertCount(1, Exercise::all());
 
-        $response = $this->delete('/exercise/' . $exercise->id);
+        $response = $this->actingAs($user)->withSession(['banned' => false])->delete('/exercise/' . $exercise->id);
 
         $this->assertCount(0, Exercise::all());
         $response->assertRedirect('/exercises');
+    }
+
+    private function create_authenticated_user()
+    {
+        $user = User::factory()->create();
+        Auth::login($user);
     }
 
     private function data()

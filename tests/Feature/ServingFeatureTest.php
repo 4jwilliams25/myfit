@@ -4,7 +4,9 @@ namespace Tests\Feature;
 
 use App\Models\Food;
 use App\Models\Serving;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class ServingFeatureTest extends TestCase
@@ -13,9 +15,11 @@ class ServingFeatureTest extends TestCase
 
     public function test_add_one_serving_type()
     {
+        $this->create_authenticated_user();
+        $user = Auth::user();
         Food::factory()->create();
 
-        $response = $this->post('/servings', $this->data());
+        $response = $this->actingAs($user)->withSession(['banned' => false])->post('/servings', $this->data());
         $servingType = Serving::first();
 
         $this->assertCount(1, Serving::all());
@@ -41,11 +45,13 @@ class ServingFeatureTest extends TestCase
 
     public function test_update_one_serving_type()
     {
+        $this->create_authenticated_user();
+        $user = Auth::user();
         Food::factory()->count(2)->create();
-        $this->post('/servings', $this->data());
+        $this->actingAs($user)->withSession(['banned' => false])->post('/servings', $this->data());
         $servingType = Serving::first();
 
-        $response = $this->patch('/servings/' . $servingType->id, [
+        $response = $this->actingAs($user)->withSession(['banned' => false])->patch('/servings/' . $servingType->id, [
             'unit_of_measure' => 'oz',
             'food_id' => 2
         ]);
@@ -58,14 +64,22 @@ class ServingFeatureTest extends TestCase
 
     public function test_delete_one_serving_type()
     {
+        $this->create_authenticated_user();
+        $user = Auth::user();
         Food::factory()->create();
-        $this->post('/servings', $this->data());
+        $this->actingAs($user)->withSession(['banned' => false])->post('/servings', $this->data());
         $servingType = Serving::first();
 
-        $response = $this->delete('/servings/' . $servingType->id);
+        $response = $this->actingAs($user)->withSession(['banned'])->delete('/servings/' . $servingType->id);
 
         $this->assertCount(0, Serving::all());
         $response->assertRedirect('/servings');
+    }
+
+    private function create_authenticated_user()
+    {
+        $user = User::factory()->create();
+        Auth::login($user);
     }
 
     private function data()
