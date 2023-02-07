@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Http\Controllers\DiaryController;
 use App\Models\Exercise;
 use App\Models\Food;
+use App\Models\Goal;
 use App\Models\Grocery;
 use App\Models\Recipe;
 use App\Models\User;
@@ -78,6 +79,19 @@ class RouteFeatureTest extends TestCase
         $response->assertStatus(200);
         $response->assertViewIs('exercises.exercise_details');
         $response->assertViewHas('exercise');
+    }
+
+    public function test_food_listview_route()
+    {
+        $this->withoutExceptionHandling();
+
+        Food::factory()->count(4)->create();
+
+        $response = $this->get('/food/list');
+
+        $response->assertStatus(200);
+        $response->assertViewIs('food.food_list');
+        $response->assertViewHas('food');
     }
 
     public function test_food_detailview_route()
@@ -190,6 +204,36 @@ class RouteFeatureTest extends TestCase
         $response->assertViewIs('workouts.workout_edit');
         $response->assertViewHas('exercises');
         $this->assertCount(4, $response['exercises']->toArray());
+    }
+
+    public function test_goals_detailview_route()
+    {
+        $this->create_authenticated_user();
+        $user = Auth::user();
+        Goal::factory()->create();
+
+        $response = $this->actingAs($user)->withSession(['banned' => false])->get('/goals/details/' . $user->id);
+
+        $response->assertStatus(200);
+        $response->assertViewIs('goals.goals_detail');
+        $response->assertViewHas('goals');
+        $this->assertCount(8, $response['goals']->toArray());
+    }
+
+    public function test_goals_editview_route()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->create_authenticated_user();
+        $user = Auth::user();
+        Goal::factory()->create();
+
+        $response = $this->actingAs($user)->withSession(['banned' => false])->get('/goals/edit/' . $user->id);
+
+        $response->assertStatus(200);
+        $response->assertViewIs('goals.goals_edit');
+        $response->assertViewHas('goals');
+        $this->assertCount(8, $response['goals']->toArray());
     }
 
     private function create_authenticated_user()

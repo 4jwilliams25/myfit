@@ -6,6 +6,7 @@ use App\Http\Controllers\GroceriesController;
 use App\Http\Controllers\NutrientsController;
 use App\Http\Controllers\RecipeBrowserController;
 use App\Http\Controllers\FoodController;
+use App\Http\Controllers\GoalController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RecipesController;
 use App\Http\Controllers\ServingController;
@@ -65,6 +66,7 @@ Route::delete('/nutrient/{nutrient}', [NutrientsController::class, 'delete_one_n
 // Foods
 Route::get('/food/details/{food}', [FoodController::class, 'index']);
 Route::get('/food/edit/{food}', [FoodController::class, 'food_editview'])->middleware(middleware: 'auth');
+Route::get('/food/list', [FoodController::class, 'food_listview']);
 Route::post('/food', [FoodController::class, 'store'])->middleware(middleware: 'auth');
 Route::get('/food/{food}', [FoodController::class, 'get_one_food_item']);
 Route::get('/food', [FoodController::class, 'get_all_food']);
@@ -93,3 +95,10 @@ Route::get('/workout/edit/{workout}', [WorkoutController::class, 'workout_editvi
 Route::get('/workouts', [WorkoutController::class, 'get_all_workouts']);
 Route::patch('/workouts/{workout}', [WorkoutController::class, 'update_one_workout'])->middleware(middleware: 'auth');
 Route::delete('/workouts/{workout}', [WorkoutController::class, 'destroy'])->middleware(middleware: 'auth');
+
+// Goals
+Route::post('/goals', [GoalController::class, 'store'])->middleware(middleware: 'auth');
+Route::patch('/goals/{user}', [GoalController::class, 'update'])->middleware(middleware: 'auth');
+Route::delete('/goals/{user}', [GoalController::class, 'destroy'])->middleware(middleware: 'auth');
+Route::get('/goals/details/{user}', [GoalController::class, 'goals_detailview'])->middleware(middleware: 'auth');
+Route::get('/goals/edit/{user}', [GoalController::class, 'goals_editview'])->middleware(middleware: 'auth');

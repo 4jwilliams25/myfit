@@ -6,8 +6,12 @@
     <title>MyFit</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
+
+@if (Auth::user())
 <nav>
     <ul>
+        <h3>MyFit</h3>
+
         <li>
             <a 
                 href="/"
@@ -18,36 +22,33 @@
         </li>
         <li>
             <a 
-                href="diary"
+                href="{{ url('diary') }}"
                 class="{{ request()->is('diary') ? 'active' : '' }}"
             >
-                Diary
+                My Diary
             </a>
         </li>
         <li>
             <a 
-                href="groceries"
-                class="{{ request()->is('groceries') ? 'active' : '' }}"
+                href="{{ url('mystuff') }}"
+                class="{{ request()->is('mystuff') ? 'active' : '' }}"
             >
-                Groceries
+                My Stuff
             </a>
         </li>
         <li>
             <a 
-                href="recipes"
-                class="{{ request()->is('recipes') ? 'active' : '' }}"
+                href="{{ url('groceries/' . Auth::user()->id) }}"
+                class="{{ request()->is('groceries/' . Auth::user()->id) ? 'active' : '' }}"
             >
-                Recipes
+                My Groceries
             </a>
         </li>
-        <li>
-            <a 
-                href="workouts"
-                class="{{ request()->is('workouts') ? 'active' : '' }}"
-            >
-                Workouts
-            </a>
-        </li>
+
+        <h3>
+            Welcome {{ Auth::user()->name}}
+        </h3>
+
         <li>
             <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
         </li>
@@ -57,3 +58,18 @@
         @csrf
     </form>
 </nav>
+@else
+<nav>
+    <ul>
+        <h3>MyFit</h3>
+
+        <li>
+            <a href="{{ route('login') }}" onclick="event.preventDefault(); document.getElementById('login-form').submit();">Login</a>
+        </li>
+    </ul>
+
+    <form id="login-form" action="{{ route('login') }}" method="POST">
+        @csrf
+    </form>
+</nav>
+@endif

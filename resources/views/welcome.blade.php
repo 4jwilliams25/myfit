@@ -2,7 +2,7 @@
 
 @section('content')
 <body>
-    <h1>This is my homepage</h1>
+    <h1>This is my homepage. Put news here or something</h1>
 </body>
 @endsection
 

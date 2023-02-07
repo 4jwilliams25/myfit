@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Models\User;
 use App\Models\Exercise;
+use App\Models\Goal;
 use App\Models\Grocery;
 use App\Models\Recipe;
 use App\Models\Workout;
@@ -66,5 +67,19 @@ class UserUnitTest extends TestCase
 
         $this->assertCount(5, Workout::all());
         $this->assertCount(3, $response);
+    }
+
+    public function test_get_goals_user()
+    {
+        $user1 = User::factory()->create();
+        User::factory()->create();
+        $goals = Goal::factory()->create();
+
+        $user = $goals->user;
+
+        $this->assertCount(2, User::all());
+        $this->assertCount(1, Goal::all());
+        $this->assertCount(8, $user->toArray());
+        $this->assertEquals($user1->name, $user->name);
     }
 }

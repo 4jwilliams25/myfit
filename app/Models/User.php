@@ -65,4 +65,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Workout::class)->withTimestamps();
     }
+
+    public function goals()
+    {
+        return $this->hasOne(Goal::class);
+    }
 }

@@ -26,6 +26,15 @@ class FoodController extends Controller
         ]);
     }
 
+    public function food_listview()
+    {
+        $food = $this->get_all_food();
+
+        return view('food.food_list', [
+            'food' => $food
+        ]);
+    }
+
     public function store()
     {
         $food = Food::create($this->validateRequest());
