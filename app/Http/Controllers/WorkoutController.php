@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Workout;
 use Illuminate\Http\Request;
 
@@ -17,11 +18,13 @@ class WorkoutController extends Controller
         ]);
     }
 
-    public function store()
+    public function store(Request $request)
     {
+        $user = Auth::user();
         $workout = Workout::create($this->validateRequest());
+        $workout->users()->attach($user);
 
-        return redirect('/workouts/' . $workout->id);
+        return redirect('/workout/edit/' . $workout->id);
     }
 
     public function workout_editview(Workout $workout)
@@ -29,8 +32,14 @@ class WorkoutController extends Controller
         $data = $workout->exercises;
 
         return view('workouts.workout_edit', [
+            'workout' => $workout,
             'exercises' => $data
         ]);
+    }
+
+    public function workout_createview()
+    {
+        return view('workouts.workout_create');
     }
 
     public function get_one_workout(Workout $workout)
@@ -51,15 +60,16 @@ class WorkoutController extends Controller
     {
         $data = $this->validateRequest();
         $workout->update($data);
+        $user = Auth::user();
 
-        return redirect('/workouts/' . $workout->id);
+        return redirect('/workouts/' . $user->id);
     }
 
     public function destroy(Workout $workout)
     {
         $workout->delete();
 
-        return redirect('/workouts');
+        return redirect('/workouts/' . Auth::user()->id);
     }
 
     private function validateRequest()

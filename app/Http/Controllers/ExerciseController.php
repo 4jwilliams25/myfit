@@ -4,19 +4,32 @@ namespace App\Http\Controllers;
 
 use App\Models\Exercise;
 use App\Models\User;
+use App\Models\Workout;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ExerciseController extends Controller
 {
-    public function index()
+    // Index method takes an optional workout
+    public function index($workoutId = "")
     {
         $exercises = $this->get_all_exercises();
+        $target_workout = DB::table('workouts')
+            ->where('id', $workoutId)
+            ->first();
+        $workouts = DB::table('workouts')->get();
 
         return view('exercises.index', [
-            'exercises' => $exercises
+            'exercises' => $exercises,
+            'workout' => $target_workout,
+            'workouts' => $workouts,
         ]);
+    }
+
+    public function exercise_createview()
+    {
+        return view('exercises.exercise_create');
     }
 
     // GET ONE EXERCISE
@@ -24,9 +37,9 @@ class ExerciseController extends Controller
     {
         $exercise = DB::table('exercises')
             ->where('id', $id)
-            ->get();
+            ->get()[0];
 
-        return view('exercises.exercise_details', [
+        return view('exercises.exercise_edit', [
             'exercise' => $exercise
         ]);
     }
@@ -42,10 +55,25 @@ class ExerciseController extends Controller
     // ADD AN EXERCISE
     public function store()
     {
-        $exercise = Exercise::create($this->validateRequest());
-        redirect('/exercise/' . $exercise->id);
+        Exercise::create($this->validateRequest());
 
-        return $exercise;
+        return redirect('/exercises/list');
+    }
+
+    // ADD AN EXERCISE TO A WORKOUT
+    public function add_exercise_to_workout(Exercise $exercise, Workout $workout)
+    {
+        $workout->exercises()->attach($exercise);
+
+        return redirect('/exercises/list/' . $workout->id);
+    }
+
+    // REMOVE AN EXERCISE FROM A WORKOUT
+    public function remove_exercise_from_workout(Exercise $exercise, Workout $workout)
+    {
+        $workout->exercises()->detach($exercise->id);
+
+        return redirect('/workout/edit/' . $workout->id);
     }
 
     // UPDATE AN EXERCISE
@@ -54,7 +82,7 @@ class ExerciseController extends Controller
         $data = $this->validateRequest();
         $exercise->update($data);
 
-        return redirect('/exercises/' . $exercise->id);
+        return redirect('/exercise/' . $exercise->id);
     }
 
     // DELETE AN EXERCISE
@@ -62,7 +90,7 @@ class ExerciseController extends Controller
     {
         $exercise->delete();
 
-        return redirect('/exercises');
+        return redirect('/exercises/list');
     }
 
     private function validateRequest()

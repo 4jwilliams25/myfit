@@ -2,14 +2,13 @@
 
 namespace Tests\Feature;
 
-use App\Http\Controllers\DiaryController;
 use App\Models\Exercise;
 use App\Models\Food;
 use App\Models\Goal;
 use App\Models\Grocery;
 use App\Models\Recipe;
-use App\Models\User;
 use App\Models\Workout;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
@@ -69,6 +68,19 @@ class RouteFeatureTest extends TestCase
         $response->assertStatus(200);
         $response->assertViewIs('exercises.index');
         $response->assertViewHas('exercises');
+        $response->assertViewHas('workout');
+    }
+
+    public function test_exercise_listview_with_workout_route()
+    {
+        $workout = Workout::factory()->create();
+        $response = $this->get('/exercises/list/' . $workout->id);
+
+        $response->assertStatus(200);
+        $response->assertViewIs('exercises.index');
+        $response->assertViewHas('exercises');
+        $response->assertViewHas('workout');
+        $this->assertEquals($workout->id, $response['workout']->id);
     }
 
     public function test_exercise_editview_route()
@@ -77,8 +89,19 @@ class RouteFeatureTest extends TestCase
         $response = $this->get('/exercise/' . $exercise->id);
 
         $response->assertStatus(200);
-        $response->assertViewIs('exercises.exercise_details');
+        $response->assertViewIs('exercises.exercise_edit');
         $response->assertViewHas('exercise');
+    }
+
+    public function test_exercise_createview_route()
+    {
+        $this->create_authenticated_user();
+        $user = Auth::user();
+
+        $response = $this->actingAs($user)->withSession(['banned' => false])->get('/exercise/create');
+
+        $response->assertStatus(200);
+        $response->assertViewIs('exercises.exercise_create');
     }
 
     public function test_food_listview_route()
@@ -191,6 +214,17 @@ class RouteFeatureTest extends TestCase
         $this->assertCount(3, $response['workouts']->toArray());
     }
 
+    public function test_workout_createview_route()
+    {
+        $this->create_authenticated_user();
+        $user = Auth::user();
+
+        $response = $this->actingAs($user)->withSession(['banned' => false])->get('/workout/create');
+
+        $response->assertStatus(200);
+        $response->assertViewIs('workouts.workout_create');
+    }
+
     public function test_workout_editview_route()
     {
         $related_exercises = Exercise::factory()->count(4)->create();
@@ -203,6 +237,7 @@ class RouteFeatureTest extends TestCase
         $response->assertStatus(200);
         $response->assertViewIs('workouts.workout_edit');
         $response->assertViewHas('exercises');
+        $response->assertViewHas('workout');
         $this->assertCount(4, $response['exercises']->toArray());
     }
 

@@ -80,21 +80,26 @@ Route::patch('/servings/{serving}', [ServingController::class, 'update_one_servi
 Route::delete('/servings/{serving}', [ServingController::class, 'delete_one_serving_type'])->middleware(middleware: 'auth');
 
 // Exercises
+Route::get('/exercises/list/{workout}', [ExerciseController::class, 'index']);
 Route::get('/exercises/list', [ExerciseController::class, 'index']);
+Route::get('/exercise/create', [ExerciseController::class, 'exercise_createview'])->middleware(middleware: 'auth');
 Route::get('/exercises', [ExerciseController::class, 'get_all_exercises']);
 Route::get('/exercise/{exercise}', [ExerciseController::class, 'get_one_exercise'])->where('exercise', '[0-9]+');
+Route::post('/exercise/{exercise}/{workout}', [ExerciseController::class, 'add_exercise_to_workout'])->middleware(middleware: 'auth');
 Route::post('/exercises', [ExerciseController::class, 'store'])->middleware(middleware: 'auth');
 Route::patch('/exercises/{exercise}', [ExerciseController::class, 'update'])->middleware(middleware: 'auth');
-Route::delete('/exercise/{exercise}', [ExerciseController::class, 'destroy'])->middleware(middleware: 'auth');
+Route::delete('/exercise/{exercise}/{workout}', [ExerciseController::class, 'remove_exercise_from_workout'])->name('exercise.remove')->middleware(middleware: 'auth');
+Route::delete('/exercise/{exercise}', [ExerciseController::class, 'destroy'])->name('exercise.destroy')->middleware(middleware: 'auth');
 
 // Workouts
 Route::post('/workouts', [WorkoutController::class, 'store'])->middleware(middleware: 'auth');
+Route::get('/workout/create', [WorkoutController::class, 'workout_createview'])->middleware(middleware: 'auth');
 Route::get('/workout/{workout}', [WorkoutController::class, 'get_one_workout']);
 Route::get('/workouts/{user}', [WorkoutController::class, 'index'])->middleware(middleware: 'auth');
 Route::get('/workout/edit/{workout}', [WorkoutController::class, 'workout_editview'])->middleware(middleware: 'auth');
 Route::get('/workouts', [WorkoutController::class, 'get_all_workouts']);
 Route::patch('/workouts/{workout}', [WorkoutController::class, 'update_one_workout'])->middleware(middleware: 'auth');
-Route::delete('/workouts/{workout}', [WorkoutController::class, 'destroy'])->middleware(middleware: 'auth');
+Route::delete('/workouts/{workout}', [WorkoutController::class, 'destroy'])->name('workout.delete')->middleware(middleware: 'auth');
 
 // Goals
 Route::post('/goals', [GoalController::class, 'store'])->middleware(middleware: 'auth');

@@ -22,7 +22,8 @@ class WorkoutFeatureTest extends TestCase
         $this->assertCount(1, Workout::all());
         $this->assertEquals('Chest Day Best Day', $workout->name);
         $this->assertEquals('Chest olympics ho!', $workout->description);
-        $response->assertRedirect('/workouts/' . $workout->id);
+        $this->assertEquals(1, count($workout->users->toArray()));
+        $response->assertRedirect('/workout/edit/' . $workout->id);
     }
 
     public function test_get_one_workout()
@@ -81,7 +82,8 @@ class WorkoutFeatureTest extends TestCase
         $response = $this->actingAs($user)->withSession(['banned' => false])->delete('/workouts/' . $workout->id);
 
         $this->assertCount(2, Workout::all());
-        $response->assertRedirect('/workouts');
+        $response->assertRedirect('/workouts/' . $user->id);
+        $this->assertCount(0, $workout->users->toArray());
     }
 
     private function create_authenticated_user()
