@@ -12,17 +12,13 @@ use Illuminate\Support\Facades\DB;
 class ExerciseController extends Controller
 {
     // Index method takes an optional workout
-    public function index($workoutId = "")
+    public function index()
     {
         $exercises = $this->get_all_exercises();
-        $target_workout = DB::table('workouts')
-            ->where('id', $workoutId)
-            ->first();
         $workouts = DB::table('workouts')->get();
 
         return view('exercises.index', [
             'exercises' => $exercises,
-            'workout' => $target_workout,
             'workouts' => $workouts,
         ]);
     }
@@ -65,7 +61,7 @@ class ExerciseController extends Controller
     {
         $workout->exercises()->attach($exercise);
 
-        return redirect('/exercises/list/' . $workout->id);
+        return $exercise;
     }
 
     // REMOVE AN EXERCISE FROM A WORKOUT

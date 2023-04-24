@@ -5,9 +5,16 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>MyFit</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script
+  src="https://code.jquery.com/jquery-3.6.4.js"
+  integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E="
+  crossorigin="anonymous"></script>
+    {{-- @vite('resources/css/app.css') --}}
 </head>
 
 @if (Auth::user())
+
 <nav>
     <ul>
         <h3>MyFit</h3>

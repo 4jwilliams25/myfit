@@ -63,24 +63,16 @@ class RouteFeatureTest extends TestCase
 
     public function test_exercise_listview_route()
     {
+        $this->withoutExceptionHandling();
+        Workout::factory()->create();
+        Exercise::factory()->count(3)->create();
+
         $response = $this->get('/exercises/list');
 
         $response->assertStatus(200);
         $response->assertViewIs('exercises.index');
         $response->assertViewHas('exercises');
-        $response->assertViewHas('workout');
-    }
-
-    public function test_exercise_listview_with_workout_route()
-    {
-        $workout = Workout::factory()->create();
-        $response = $this->get('/exercises/list/' . $workout->id);
-
-        $response->assertStatus(200);
-        $response->assertViewIs('exercises.index');
-        $response->assertViewHas('exercises');
-        $response->assertViewHas('workout');
-        $this->assertEquals($workout->id, $response['workout']->id);
+        $response->assertViewHas('workouts');
     }
 
     public function test_exercise_editview_route()
@@ -236,9 +228,11 @@ class RouteFeatureTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertViewIs('workouts.workout_edit');
-        $response->assertViewHas('exercises');
+        $response->assertViewHas('workoutExercises');
+        $response->assertViewHas('userExercises');
+        $response->assertViewHas('allExercises');
         $response->assertViewHas('workout');
-        $this->assertCount(4, $response['exercises']->toArray());
+        $this->assertCount(4, $response['workoutExercises']->toArray());
     }
 
     public function test_goals_detailview_route()

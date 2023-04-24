@@ -32,17 +32,15 @@
     </button>
 </form>
 
-<div>
-    <button>
-        <a href="{{ url('/exercises/list/' . $workout->id) }}">Add Exercises</a>
-    </button>
-</div>
+@include('workouts.modal')
 
 <div>
     <h4>Exercises</h4>
-    @if (count($exercises) > 0)
-        <ul>
-            @foreach ($exercises as $exercise)
+    @if (count($workoutExercises) > 0)
+        <ul id="workout_exercise_list">
+            @foreach ($workoutExercises as $exercise)
+
+            
                 <li>
                     <div style="border: 2px solid black; margin: 3px; width: 500px; padding: 3px;">
                         <h5>{{$exercise->name}}</h5>
