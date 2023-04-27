@@ -73,6 +73,9 @@
             </ul>
         </div>
         <div class="flex justify-end items-center w-100 border-t p-3">
+            <button class="bg-green-600 hover:bg-green700 px-3 py-1 rounded text-white mr-1">
+                <a href="{{ route('exercise.create') }}">Create an Exercise</a>
+            </button>
             <button class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-white mr-1 close-modal">Cancel</button>
             {{-- Removing add button for now. May add back in for multiselect --}}
             {{-- <button class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-white">Add to Workout</button> --}}
@@ -81,83 +84,4 @@
     
 </div>
 
-<script>
-  const modal = $('.modal');
-  const showModalButton = $('.show-modal');
-  const closeModal = $('.close-modal');
-  const myExercisesTab = $('#myExercisesTab');
-  const allExercisesTab = $('#allExercisesTab');
-  const myExercisesPanel = $('#myExercises');
-  const allExercisesPanel = $('#allExercises');
-
-  const tabToggleArray = ['border-transparent', 'border-blue-600', 'hover:text-gray-600', 'text-blue-600', 'hover:border-gray-300'];
-
-  showModalButton.click(function () {
-    modal.removeClass('invisible');
-  });
-
-  closeModal.each(function () {
-    $(this).click(function () {
-        modal.addClass('invisible');
-    });
-  });
-
-  myExercisesTab.click(function () {
-      myExercisesPanel.removeClass('hidden');
-      allExercisesPanel.addClass('hidden');
-
-      tabToggleArray.forEach(attribute => {
-          myExercisesTab.toggleClass(attribute);
-          allExercisesTab.toggleClass(attribute);
-      });
-  });
-
-  allExercisesTab.click(function () {
-      allExercisesPanel.removeClass('hidden');
-      myExercisesPanel.addClass('hidden');
-
-      tabToggleArray.forEach(attribute => {
-          myExercisesTab.toggleClass(attribute);
-          allExercisesTab.toggleClass(attribute);
-      });
-  });
-
-  function add_exercise_to_workout(exerciseId, workoutId) {
-        const baseURL = window.location.origin;
-        const token = '{{csrf_token()}}';
-
-        const request = new XMLHttpRequest();
-
-        $.post(
-            `${baseURL}/exercise/${exerciseId}/${workoutId}`,
-            { _token: token },
-            function (data, status) {
-                modal.addClass('invisible');
-
-                const newExercise = 
-                    `<li>
-                        <div style="border: 2px solid black; margin: 3px; width: 500px; padding: 3px;">
-                            <h5>${data['name']}</h5>
-                            <p>Reps: ${data['repetitions']}</p>
-                            <p>Sets: ${data['sets']}</p>
-                            <p>Weight: ${data['weight']}</p>
-                            <form action="{{ route('exercise.remove', ['exercise' => $exercise->id, 'workout' => $workout->id]) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit">
-                                    Remove
-                                </button>
-                            </form>
-                        </div>
-                    </li>`;
-                $('#workout_exercise_list').append(newExercise);
-            }
-        ).fail(function (data, status, error) {
-            console.log(data);
-            console.log(status);
-            console.log(error);
-            throw new Error("Bad Request");
-        });
-  };
-
-</script>
+<script type="text/javascript" src="{{ asset('assets/exercise_modal.js') }}"></script>

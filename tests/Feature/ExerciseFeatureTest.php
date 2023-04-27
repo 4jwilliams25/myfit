@@ -38,9 +38,8 @@ class ExerciseFeatureTest extends TestCase
 
         $response = $this->actingAs($user)->withSession(['banned' => false])->post('/exercise/' . $exercise->id . '/' . $workout->id);
 
-        $response->assertStatus(302);
+        $response->assertStatus(200);
         $this->assertEquals($exercise->id, $workout->exercises[0]->id);
-        $response->assertRedirect('/exercises/list/' . $workout->id);
     }
 
     public function test_remove_exercise_from_workout()

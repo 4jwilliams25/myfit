@@ -81,7 +81,7 @@ Route::delete('/servings/{serving}', [ServingController::class, 'delete_one_serv
 
 // Exercises
 Route::get('/exercises/list', [ExerciseController::class, 'index']);
-Route::get('/exercise/create', [ExerciseController::class, 'exercise_createview'])->middleware(middleware: 'auth');
+Route::get('/exercise/create', [ExerciseController::class, 'exercise_createview'])->name('exercise.create')->middleware(middleware: 'auth');
 Route::get('/exercises', [ExerciseController::class, 'get_all_exercises']);
 Route::get('/exercise/{exercise}', [ExerciseController::class, 'get_one_exercise'])->where('exercise', '[0-9]+');
 Route::post('/exercise/{exercise}/{workout}', [ExerciseController::class, 'add_exercise_to_workout'])->middleware(middleware: 'auth');
