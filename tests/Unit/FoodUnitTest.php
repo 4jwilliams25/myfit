@@ -49,7 +49,7 @@ class FoodUnitTest extends TestCase
         User::factory()->create();
         $related_diaries = Diary::factory()->count(4)->create();
         Diary::factory()->count(4)->create();
-        $food = Food::factory()->hasAttached($related_diaries)->create();
+        $food = Food::factory()->hasAttached($related_diaries, ['meal' => 'Dinner'])->create();
 
         $response = $food->diaries;
 

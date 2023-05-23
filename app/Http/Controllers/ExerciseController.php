@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Workout;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ExerciseController extends Controller
@@ -51,9 +52,12 @@ class ExerciseController extends Controller
     // ADD AN EXERCISE
     public function store()
     {
-        Exercise::create($this->validateRequest());
+        $user = Auth::user();
+        $url = request()->input('url');
+        $response = Exercise::create($this->validateRequest());
+        $user->exercises()->attach($response);
 
-        return redirect('/exercises/list');
+        return redirect($url)->with('status', 'Exercise saved successfully!');
     }
 
     // ADD AN EXERCISE TO A WORKOUT
@@ -86,7 +90,7 @@ class ExerciseController extends Controller
     {
         $exercise->delete();
 
-        return redirect('/exercises/list');
+        return $exercise;
     }
 
     private function validateRequest()

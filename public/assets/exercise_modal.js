@@ -48,8 +48,6 @@ function add_exercise_to_workout(exerciseId, workoutId) {
     const baseURL = window.location.origin;
     const token = $('meta[name="csrf-token"]').attr("content");
 
-    const request = new XMLHttpRequest();
-
     $.post(
         `${baseURL}/exercise/${exerciseId}/${workoutId}`,
         { _token: token },
@@ -74,6 +72,30 @@ function add_exercise_to_workout(exerciseId, workoutId) {
             $("#workout_exercise_list").append(newExercise);
         }
     ).fail(function (data, status, error) {
+        console.log(data);
+        console.log(status);
+        console.log(error);
+        throw new Error("Bad Request");
+    });
+}
+
+function modal_delete_exercise(exerciseId) {
+    const baseURL = window.location.origin;
+    const token = $('meta[name="csrf-token"]').attr("content");
+
+    $.ajax({
+        url: `${baseURL}/exercise/${exerciseId}`,
+        type: "DELETE",
+        data: { _token: token },
+        success: function (data, status) {
+            if ($(`#${exerciseId}_all_card`)) {
+                $(`#${exerciseId}_all_card`).remove();
+            }
+            if ($(`#${exerciseId}_my_card`)) {
+                $(`#${exerciseId}_my_card`).remove();
+            }
+        },
+    }).fail(function (data, status, error) {
         console.log(data);
         console.log(status);
         console.log(error);

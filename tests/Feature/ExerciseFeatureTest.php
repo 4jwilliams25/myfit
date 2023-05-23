@@ -27,6 +27,8 @@ class ExerciseFeatureTest extends TestCase
         $this->assertEquals(3, Exercise::first()->sets);
         $this->assertEquals(45, Exercise::first()->weight);
         $this->assertEquals('exceeded once', Exercise::first()->notes);
+        $this->assertCount(1, $user->exercises->toArray());
+        $this->assertEquals($user->exercises[0]['id'], Exercise::first()->id);
     }
 
     public function test_add_one_exercise_to_one_workout()
@@ -112,7 +114,7 @@ class ExerciseFeatureTest extends TestCase
         $response = $this->actingAs($user)->withSession(['banned' => false])->delete('/exercise/' . $exercise->id);
 
         $this->assertCount(0, Exercise::all());
-        $response->assertRedirect('/exercises/list');
+        $this->assertEquals($response->getData()->id, $exercise->id);
     }
 
     private function create_authenticated_user()

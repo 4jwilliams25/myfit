@@ -9,6 +9,8 @@ class Diary extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['date', 'user_id'];
+
     public function exercises()
     {
         return $this->belongsToMany(Exercise::class)->withTimestamps();
@@ -22,5 +24,10 @@ class Diary extends Model
     public function food()
     {
         return $this->belongsToMany(Food::class)->withTimestamps();
+    }
+
+    public function workouts()
+    {
+        return $this->belongsToMany(Workout::class)->withTimestamps();
     }
 }
