@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Diary;
 use App\Models\Exercise;
 use App\Models\Food;
 use App\Models\Goal;
@@ -39,15 +40,49 @@ class RouteFeatureTest extends TestCase
         $response->assertViewIs('my_stuff.index');
     }
 
-    public function test_diary_route()
+    public function test_diary_route_no_diary_yet()
     {
+        $this->withoutExceptionHandling();
+
+        $this->create_authenticated_user();
+        $user = Auth::user();
+        $this->create_authenticated_user();
+
+        $response = $this->actingAs($user)->withSession(['banned' => false])->get('/diary');
+
+        $response->assertStatus(200);
+        $this->assertCount(1, Diary::all());
+        $response->assertViewIs('diary.index');
+        $response->assertViewHas('diary');
+        $response->assertViewHas('food');
+        $response->assertViewHas('recipes');
+        $response->assertViewHas('exercises');
+        $response->assertViewHas('workouts');
+    }
+
+    public function test_diary_route_diary_already_exists()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->create_authenticated_user();
+        $user = Auth::user();
+        Diary::create([
+            'date' => date('Ymd'),
+            'user_id' => $user->id
+        ]);
         $this->create_authenticated_user();
         $user = Auth::user();
 
         $response = $this->actingAs($user)->withSession(['banned' => false])->get('/diary');
 
         $response->assertStatus(200);
+        $this->assertCount(1, Diary::all());
         $response->assertViewIs('diary.index');
+        $response->assertViewHas('diary');
+        $response->assertViewHas('food');
+        $response->assertViewHas('recipes');
+        $response->assertViewHas('exercises');
+        $response->assertViewHas('workouts');
     }
 
     public function test_diary_nutritional_breakdown_route()
@@ -55,32 +90,26 @@ class RouteFeatureTest extends TestCase
         $this->create_authenticated_user();
         $user = Auth::user();
 
+        $this->actingAs($user)->withSession(['banned' => false])->get('/diary');
         $response = $this->actingAs($user)->withSession(['banned' => false])->get('/diary/nutrition');
 
         $response->assertStatus(200);
         $response->assertViewIs('diary.daily_nutritional_breakdown');
+        $response->assertViewHas('diary');
     }
 
     public function test_exercise_listview_route()
     {
+        $this->withoutExceptionHandling();
+        Workout::factory()->create();
+        Exercise::factory()->count(3)->create();
+
         $response = $this->get('/exercises/list');
 
         $response->assertStatus(200);
         $response->assertViewIs('exercises.index');
         $response->assertViewHas('exercises');
-        $response->assertViewHas('workout');
-    }
-
-    public function test_exercise_listview_with_workout_route()
-    {
-        $workout = Workout::factory()->create();
-        $response = $this->get('/exercises/list/' . $workout->id);
-
-        $response->assertStatus(200);
-        $response->assertViewIs('exercises.index');
-        $response->assertViewHas('exercises');
-        $response->assertViewHas('workout');
-        $this->assertEquals($workout->id, $response['workout']->id);
+        $response->assertViewHas('workouts');
     }
 
     public function test_exercise_editview_route()
@@ -236,9 +265,11 @@ class RouteFeatureTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertViewIs('workouts.workout_edit');
-        $response->assertViewHas('exercises');
+        $response->assertViewHas('workoutExercises');
+        $response->assertViewHas('userExercises');
+        $response->assertViewHas('allExercises');
         $response->assertViewHas('workout');
-        $this->assertCount(4, $response['exercises']->toArray());
+        $this->assertCount(4, $response['workoutExercises']->toArray());
     }
 
     public function test_goals_detailview_route()

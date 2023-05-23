@@ -23,4 +23,9 @@ class Workout extends Model
     {
         return $this->belongsToMany(Exercise::class)->withTimestamps();
     }
+
+    public function diaries()
+    {
+        return $this->belongsToMany(Diary::class)->withTimestamps();
+    }
 }

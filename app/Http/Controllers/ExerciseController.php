@@ -7,22 +7,19 @@ use App\Models\User;
 use App\Models\Workout;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ExerciseController extends Controller
 {
     // Index method takes an optional workout
-    public function index($workoutId = "")
+    public function index()
     {
         $exercises = $this->get_all_exercises();
-        $target_workout = DB::table('workouts')
-            ->where('id', $workoutId)
-            ->first();
         $workouts = DB::table('workouts')->get();
 
         return view('exercises.index', [
             'exercises' => $exercises,
-            'workout' => $target_workout,
             'workouts' => $workouts,
         ]);
     }
@@ -55,9 +52,12 @@ class ExerciseController extends Controller
     // ADD AN EXERCISE
     public function store()
     {
-        Exercise::create($this->validateRequest());
+        $user = Auth::user();
+        $url = request()->input('url');
+        $response = Exercise::create($this->validateRequest());
+        $user->exercises()->attach($response);
 
-        return redirect('/exercises/list');
+        return redirect($url)->with('status', 'Exercise saved successfully!');
     }
 
     // ADD AN EXERCISE TO A WORKOUT
@@ -65,7 +65,7 @@ class ExerciseController extends Controller
     {
         $workout->exercises()->attach($exercise);
 
-        return redirect('/exercises/list/' . $workout->id);
+        return $exercise;
     }
 
     // REMOVE AN EXERCISE FROM A WORKOUT
@@ -90,7 +90,7 @@ class ExerciseController extends Controller
     {
         $exercise->delete();
 
-        return redirect('/exercises/list');
+        return $exercise;
     }
 
     private function validateRequest()

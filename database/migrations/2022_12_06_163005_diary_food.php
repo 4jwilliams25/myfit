@@ -18,6 +18,8 @@ class DiaryFood extends Migration
 
             $table->foreignId('food_id')->constrained()->onDelete('cascade');
 
+            $table->string('meal');
+
             $table->timestamps();
         });
     }

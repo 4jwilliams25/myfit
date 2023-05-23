@@ -2,12 +2,6 @@
 
 @section('content')
 
-@if ($workout)
-    <button>
-        <a href="{{ url('/workout/edit/' . $workout->id) }}">Back to Workout</a>
-    </button>
-@endif
-
 <div>
     <button>
         <a href="{{ url('/exercise/create') }}">Create an Exercise</a>
@@ -28,14 +22,6 @@
                 <p>Reps: {{$exercise->repetitions}}</p>
                 <p>Sets: {{$exercise->sets}}</p>
                 <p>Weight: {{$exercise->weight}}</p>
-                @if ($workout)
-                    <form action="{{ url('/exercise/' . $exercise->id . '/' . $workout->id) }}" method="post">
-                        @csrf
-                        <button type="submit">
-                            Add to Workout
-                        </button>
-                    </form>
-                @endif
                 <a href="{{ url('/exercise/' . $exercise->id) }}">Edit</a>
                 <form action="{{ route('exercise.destroy', $exercise->id) }}" method="POST">
                     @csrf

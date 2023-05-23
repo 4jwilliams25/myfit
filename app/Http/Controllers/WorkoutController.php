@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Exercise;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Workout;
@@ -29,11 +30,15 @@ class WorkoutController extends Controller
 
     public function workout_editview(Workout $workout)
     {
-        $data = $workout->exercises;
+        $workoutExercises = $workout->exercises;
+        $userExercises = Auth::user()->exercises;
+        $allExercises = Exercise::all();
 
         return view('workouts.workout_edit', [
             'workout' => $workout,
-            'exercises' => $data
+            'workoutExercises' => $workoutExercises,
+            'userExercises' => $userExercises,
+            'allExercises' => $allExercises
         ]);
     }
 
