@@ -7,23 +7,33 @@ use App\Models\User;
 use App\Models\Workout;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ExerciseController extends Controller
 {
     // Index method takes an optional workout
-    public function index($workoutId = "")
+    public function index()
     {
+        $target_workout = '';
+        $diary = '';
+
+        $launchPoint = session()->get('launchPoint');
+        $launchPointId = basename($launchPoint);
+
+        if (str_contains($launchPoint, 'workout')) {
+            $target_workout = DB::table('workouts')
+                ->where('id', $launchPointId)
+                ->first();
+        }
+
         $exercises = $this->get_all_exercises();
-        $target_workout = DB::table('workouts')
-            ->where('id', $workoutId)
-            ->first();
-        $workouts = DB::table('workouts')->get();
 
         return view('exercises.index', [
             'exercises' => $exercises,
             'workout' => $target_workout,
-            'workouts' => $workouts,
+            'diary' => $diary,
+            'launchPointId' => $launchPointId
         ]);
     }
 
@@ -55,9 +65,11 @@ class ExerciseController extends Controller
     // ADD AN EXERCISE
     public function store()
     {
-        Exercise::create($this->validateRequest());
+        $user = Auth::user();
+        $response = Exercise::create($this->validateRequest());
+        $user->exercises()->attach($response);
 
-        return redirect('/exercises/list');
+        return redirect('/exercises/list')->with('status', 'Exercise saved successfully!');;
     }
 
     // ADD AN EXERCISE TO A WORKOUT
