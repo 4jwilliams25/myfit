@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
+
+@php
+    session()->put('launchPoint', url()->full());
+@endphp
+
 <div>
     <button>
         <a href="{{ url('/workouts/' . Auth::user()->id) }}">Go to My Workouts</a>
@@ -34,7 +39,7 @@
 
 <div>
     <button>
-        <a href="{{ url('/exercises/list/' . $workout->id) }}">Add Exercises</a>
+        <a href="{{ url('/exercises/list') }}">Add Exercises</a>
     </button>
 </div>
 

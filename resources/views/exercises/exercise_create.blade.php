@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
     <form action="{{ url('/exercises') }}" method="post">
         @csrf
         <label for="name">Exercise Name</label>

@@ -73,8 +73,10 @@ class RouteFeatureTest extends TestCase
 
     public function test_exercise_listview_with_workout_route()
     {
+        session()->put('launchPoint', 'http://localhost/workout/edit/1');
         $workout = Workout::factory()->create();
-        $response = $this->get('/exercises/list/' . $workout->id);
+        $response = $this->get('/exercises/list');
+        session()->flush();
 
         $response->assertStatus(200);
         $response->assertViewIs('exercises.index');

@@ -4,7 +4,7 @@
 
 @if ($workout)
     <button>
-        <a href="{{ url('/workout/edit/' . $workout->id) }}">Back to Workout</a>
+        <a href="{{ url('/workout/edit/' . $launchPointId) }}">Back to Workout</a>
     </button>
 @endif
 

@@ -27,6 +27,7 @@ class ExerciseFeatureTest extends TestCase
         $this->assertEquals(3, Exercise::first()->sets);
         $this->assertEquals(45, Exercise::first()->weight);
         $this->assertEquals('exceeded once', Exercise::first()->notes);
+        $this->assertEquals(Exercise::first()->users[0]->id, $user->id);
     }
 
     public function test_add_one_exercise_to_one_workout()
