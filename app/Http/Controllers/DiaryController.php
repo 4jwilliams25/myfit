@@ -14,7 +14,6 @@ class DiaryController extends Controller
     {
         $diary = '';
         $date = date('Ymd');
-        $user = Auth::user();
 
         if (!DB::table('diaries')->where('date', $date)->exists()) {
             $this->add_one_diary($date);
@@ -25,16 +24,12 @@ class DiaryController extends Controller
 
         $diary = Diary::hydrate($diary->all())[0];
 
-        $food = Food::all();
-        $exercises = Exercise::all();
-
         return view('diary.index', [
             'diary' => $diary,
-            'food' => $food,
-            'recipes' => $user->recipes,
-            'userExercises' => $user->exercises,
-            'allExercises' => $exercises,
-            'workouts' => $user->workouts
+            'food' => $diary->food,
+            'recipes' => $diary->recipes,
+            'exercises' => $diary->exercises,
+            'workouts' => $diary->workouts
         ]);
     }
 

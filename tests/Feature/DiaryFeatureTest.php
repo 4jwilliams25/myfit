@@ -18,8 +18,6 @@ class DiaryFeatureTest extends TestCase
 
     public function test_diary_gets_related_data()
     {
-        $this->withoutExceptionHandling();
-
         $this->create_authenticated_user();
         $user = Auth::user();
         $date = date('Ymd');
@@ -31,7 +29,7 @@ class DiaryFeatureTest extends TestCase
         $foods = Food::factory()->count(6)->create();
         $exercises = Exercise::factory()->count(6)->create();
         $workout = Workout::factory()->create();
-        $user->recipes()->attach($recipes);
+        $diary->recipes()->attach($recipes, ['meal' => 'Breakfast']);
         $diary->food()->attach($foods, ['meal' => 'Lunch']);
         $diary->exercises()->attach($exercises);
         $diary->workouts()->attach($workout);
@@ -43,14 +41,32 @@ class DiaryFeatureTest extends TestCase
         $response->assertViewHas('diary');
         $response->assertViewHas('food');
         $response->assertViewHas('recipes');
-        $response->assertViewHas('userExercises');
-        $response->assertViewHas('allExercises');
+        $response->assertViewHas('exercises');
         $response->assertViewHas('workouts');
         $this->assertEquals($diary->id, $response['diary']->id);
         $this->assertCount(6, $response['food']);
         $this->assertCount(2, $response['recipes']);
         $this->assertCount(6, $response['exercises']);
         $this->assertCount(1, $response['workouts']);
+    }
+
+    public function test_blank_diary_gets_related_data()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->create_authenticated_user();
+        $user = Auth::user();
+
+        $response = $this->actingAs($user)->withSession(['banned' => false])->get('/diary');
+
+        $response->assertStatus(200);
+        $response->assertViewIs('diary.index');
+        $response->assertViewHas('diary');
+        $response->assertViewHas('food');
+        $response->assertViewHas('recipes');
+        $response->assertViewHas('exercises');
+        $response->assertViewHas('workouts');
+        $this->assertCount(9, $response['diary']->toArray());
     }
 
     private function create_authenticated_user()
