@@ -18,6 +18,8 @@ class DiaryRecipe extends Migration
 
             $table->foreignId('recipe_id')->constrained()->onDelete('cascade');
 
+            $table->string('meal');
+
             $table->timestamps();
         });
     }

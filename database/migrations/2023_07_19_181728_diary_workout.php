@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class DiaryFood extends Migration
+class DiaryWorkout extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,10 @@ class DiaryFood extends Migration
      */
     public function up()
     {
-        Schema::create('diary_food', function (Blueprint $table) {
+        Schema::create('diary_workout', function (Blueprint $table) {
             $table->foreignId('diary_id')->constrained()->onDelete('cascade');
 
-            $table->foreignId('food_id')->constrained()->onDelete('cascade');
-
-            $table->string('meal');
+            $table->foreignId('workout_id')->constrained()->onDelete('cascade');
 
             $table->timestamps();
         });
